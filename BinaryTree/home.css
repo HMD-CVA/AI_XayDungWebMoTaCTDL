@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 /* ============================================================================
    BST VISUALIZATION CSS - COMPLETE REBUILD
    ============================================================================ */
 
 :root {
     /* Primary Colors */
+=======
+
+:root {
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
     --primary: #4361ee;
     --secondary: #3a0ca3;
     --success: #4cc9f0;
@@ -12,6 +17,7 @@
     --info: #7209b7;
     --light: #f8f9fa;
     --dark: #212529;
+<<<<<<< HEAD
     
     /* Background & Text */
     --background: #f8f9fa;
@@ -29,6 +35,13 @@
 }
 
 /* ==================== GLOBAL RESET ==================== */
+=======
+    --background: #f8f9fa;
+    --card-bg: #ffffff;
+    --text: #333333;
+}
+
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
 * {
     margin: 0;
     padding: 0;
@@ -40,21 +53,34 @@ body {
     background: var(--background);
     color: var(--text);
     height: 100vh;
+<<<<<<< HEAD
     width: 100vw;
     overflow: hidden;
     position: relative;
 }
 
 /* ==================== APP LAYOUT ==================== */
+=======
+    overflow: hidden;
+}
+
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
 .app-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
+<<<<<<< HEAD
     width: 100vw;
     position: relative;
 }
 
 /* ==================== HEADER ==================== */
+=======
+    width: 100%;
+}
+
+/* Header */
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
 .app-header {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: white;
@@ -64,7 +90,10 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+<<<<<<< HEAD
     flex-shrink: 0;
+=======
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
 }
 
 .app-title {
@@ -84,7 +113,11 @@ body {
     gap: 10px;
 }
 
+<<<<<<< HEAD
 /* ==================== CONTROL BAR ==================== */
+=======
+/* Control Bar */
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
 .control-bar {
     background: var(--card-bg);
     padding: 15px 20px;
@@ -92,7 +125,10 @@ body {
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     overflow: hidden;
+<<<<<<< HEAD
     flex-shrink: 0;
+=======
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
 }
 
 .control-bar.collapsed {
@@ -124,12 +160,17 @@ body {
     white-space: nowrap;
 }
 
+<<<<<<< HEAD
 /* ==================== MAIN CONTENT ==================== */
+=======
+/* Main Content */
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
 .main-content {
     flex: 1;
     background: var(--background);
     position: relative;
     overflow: hidden;
+<<<<<<< HEAD
     width: 100%;
     min-height: 0;
 }
@@ -142,6 +183,17 @@ body {
     left: 0;
     overflow: auto;
     background: #ffffff;
+=======
+}
+
+/* Graph Container */
+.graph-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: auto;
+    background: var(--background);
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
     cursor: grab;
 }
 
@@ -149,6 +201,7 @@ body {
     cursor: grabbing;
 }
 
+<<<<<<< HEAD
 /* ==================== SVG CONTAINER ==================== */
 #treeSVG {
     width: 100%;
@@ -168,6 +221,8 @@ body {
     cursor: grabbing;
 }
 
+=======
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
 /* Info Panel */
 .info-panel {
     position: fixed;
@@ -230,6 +285,7 @@ body {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
+<<<<<<< HEAD
 /* ==================== SVG GRAPH STYLES (VISUALGO ARCHITECTURE) ==================== */
 
 /* ==================== SVG ELEMENTS STYLES ==================== */
@@ -301,6 +357,58 @@ line.link-left {
 
 line.link-right {
     stroke: #4361ee;
+=======
+/* Graph Styles */
+.node {
+    cursor: pointer;
+    transition: all 0.3s;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.node circle {
+    fill: var(--primary);
+    stroke: white;
+    stroke-width: 3px;
+    transition: all 0.3s;
+}
+
+.node circle:hover {
+    fill: var(--secondary);
+    r: 28;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.node text {
+    font-size: 16px;
+    font-weight: 700;
+    pointer-events: none;
+    user-select: none;
+    fill: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.link {
+    stroke: #a0a0a0;
+    stroke-width: 2.5px;
+    fill: none;
+    transition: all 0.3s;
+}
+
+.selected circle {
+    fill: var(--danger);
+    stroke: white;
+    filter: drop-shadow(0 0 8px rgba(247, 37, 133, 0.4));
+}
+
+.left-node circle {
+    fill: var(--success);
+    stroke: white;
+}
+
+.right-node circle {
+    fill: var(--primary);
+    stroke: white;
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
 }
 
 /* Zoom Controls */
@@ -442,6 +550,7 @@ line.link-right {
     padding-left: 24px;
 }
 
+<<<<<<< HEAD
 /* ==================== ANIMATION CLASSES ==================== */
 
 /* Node Added Animation */
@@ -468,10 +577,37 @@ line.link-right {
 }
 
 /* Node Removed Animation */
+=======
+/* Animation Classes */
+.node-added {
+    animation: nodeAdded 0.6s ease;
+}
+
+.node-removed {
+    animation: nodeRemoved 0.6s ease forwards;
+}
+
+@keyframes nodeAdded {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    70% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
 @keyframes nodeRemoved {
     0% {
         transform: scale(1);
         opacity: 1;
+<<<<<<< HEAD
         filter: blur(0);
     }
     50% {
@@ -537,6 +673,45 @@ line.link-right {
     50% {
         transform: scale(1.08);
         filter: drop-shadow(0 0 20px rgba(247, 37, 133, 0.8));
+=======
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* Traversal Animation */
+.traversal-arrow {
+    fill: var(--danger);
+    stroke: white;
+    stroke-width: 2;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.node-visited circle {
+    fill: var(--warning) !important;
+    stroke: white !important;
+    animation: pulse 0.8s ease;
+}
+
+.node-current circle {
+    fill: var(--danger) !important;
+    stroke: white !important;
+    animation: pulse 0.8s ease infinite;
+    filter: drop-shadow(0 0 12px rgba(247, 37, 133, 0.6));
+}
+
+@keyframes pulse {
+    0% {
+        r: 24;
+    }
+    50% {
+        r: 28;
+    }
+    100% {
+        r: 24;
+>>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
     }
 }
 
