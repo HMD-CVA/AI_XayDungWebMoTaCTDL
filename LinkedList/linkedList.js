@@ -69,6 +69,31 @@ class LinkedList {
         return p
     }
 
+    addByIndex(index, value) {
+        if (index < 0) return null
+        if (index === 0) return this.addHead(value)
+
+        let tmp = this.head
+        let count = 0
+
+        while (tmp !== null && count < index - 1) {
+            tmp = tmp.next
+            count++
+        }
+
+        if (tmp === null) return null
+
+        if (tmp === this.tail) {
+            return this.addTail(value)
+        }
+
+        const p = new Node(value)
+        p.next = tmp.next
+        tmp.next = p
+
+        return p
+    }
+
     removeHead() {
         if (this.head === null) return
         else if (this.head === this.tail) this.head = this.tail = null
@@ -95,6 +120,33 @@ class LinkedList {
             if (tmp.next === null) return
             tmp.next = node.next
         }
+    }
+
+    removeByIndex(index) {
+        if (index < 0 || this.head === null) return null
+        if (index === 0) {
+            const removed = this.head
+            this.removeHead()
+            return removed
+        }
+
+        let tmp = this.head
+        let count = 0
+
+        while (tmp !== null && count < index - 1) {
+            tmp = tmp.next
+            count++
+        }
+
+        if (tmp === null || tmp.next === null) return null
+
+        const removed = tmp.next
+        if (tmp.next === this.tail) {
+            this.tail = tmp
+        }
+        tmp.next = tmp.next.next
+
+        return removed
     }
 
     searchByValue(value) {
@@ -135,6 +187,10 @@ class LinkedList {
             p = p.next
         }
         return n
+    }
+
+    isEmpty() {
+        return this.head === null
     }
 }
 
