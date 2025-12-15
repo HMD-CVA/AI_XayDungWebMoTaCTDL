@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Sort Visualizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <header class="text-white py-4 shadow-sm">
+        <div class="container">
+            <i class="bi bi-sort-numeric-down"></i> Bubble Sort Visualizer
+        </div>
+    </header>
+
+    <div class="busy-overlay">
+        <div class="toolbar container my-4">
+            <div class="card shadow-sm">
+                <div class="card-body function-card">
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <div class="d-flex flex-wrap align-items-center gap-2 flex-grow-1">
+                            <button id="btn-create-random" class="btn btn-warning"><i class="bi bi-shuffle"></i> Random
+                                Array</button>
+                            <button id="btn-custom-input" class="btn btn-info"><i class="bi bi-keyboard"></i> Custom
+                                Input</button>
+                            <button id="btn-start" class="btn btn-success"><i class="bi bi-play-circle"></i> Start
+                                Sort</button>
+                            <button id="btn-reset" class="btn btn-secondary"><i
+                                    class="bi bi-arrow-counterclockwise"></i> Reset</button>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 ms-auto flex-wrap">
+                            <label class="form-label mb-0 fw-bold text-nowrap">
+                                <i class="bi bi-speedometer2"></i> Speed:
+                            </label>
+                            <input type="range" class="form-range flex-grow-1" id="animation-speed-slider" min="50"
+                                max="1000" step="50" value="500" style="max-width: 240px;">
+                            <span id="speed-value" class="badge bg-primary">500ms</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12" id="display-container">
+                    <div class="display-area d-flex align-items-end justify-content-center gap-2"
+                        style="min-height: 400px;">
+                        <!-- Bars will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Overlay -->
+        <div id="sidebar-overlay" class="sidebar-overlay">
+            <div id="sidebar" class="card shadow-sm">
+                <div class="sidebar-title d-flex align-items-center gap-2 px-3 py-3">
+                    <i class="bi bi-code-slash fs-5"></i>
+                    <h1 class="sidebar-heading mb-0">Pseudocode</h1>
+                </div>
+                <div class="card-body">
+                    <pre id="pseudocode-content"
+                        class="mb-0"><code style="color: #2c3e50;">// Bubble Sort Logic</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toggle Button -->
+        <button id="toggle-sidebar" class="btn btn-dark rounded-pill shadow" title="Toggle sidebar">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+    </div>
+
+    <!-- Create Random Modal -->
+    <div class="overlay-create-random">
+        <div class="modal-create-random card shadow-lg">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Create Random Array</h5>
+                <div class="input-group">
+                    <span class="input-group-text">Size (n) =</span>
+                    <input class="number-n form-control" type="number" placeholder="10-50" min="5" max="50" value="20">
+                    <button id="btn-go" class="btn btn-primary"><i class="bi bi-check-lg"></i> Go</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Input Modal -->
+    <div class="overlay-custom-input"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1050;">
+        <div class="modal-custom-input card shadow-lg"
+            style="position: absolute; background: #fff; width: 350px; border-radius: 12px;">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Custom Input</h5>
+                <div class="mb-2">
+                    <small class="text-muted">Enter numbers separated by comma (e.g. 10, 5, 30)</small>
+                </div>
+                <div class="input-group">
+                    <input id="input-custom-data" class="form-control" type="text" placeholder="10, 20, 5, ...">
+                    <button id="btn-custom-go" class="btn btn-primary"><i class="bi bi-check-lg"></i> Go</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="module" src="./script.js"></script>
+</body>
+
+</html>
