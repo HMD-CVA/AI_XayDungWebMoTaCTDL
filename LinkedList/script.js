@@ -59,10 +59,204 @@ const toggleSidebarBtn = document.querySelector('#toggle-sidebar')
 const sidebarOverlay = document.querySelector('#sidebar-overlay')
 let sidebarVisible = false
 
+// Tutorial elements
+const tutorialOverlay = document.querySelector('.tutorial-overlay')
+const tutorialModal = document.querySelector('.tutorial-modal')
+const tutorialTitle = document.querySelector('.tutorial-title')
+const tutorialContent = document.querySelector('.tutorial-content')
+const tutorialProgress = document.querySelector('.tutorial-progress')
+const btnTutorial = document.querySelector('#btn-tutorial')
+const btnNextTutorial = document.querySelector('#btn-next-tutorial')
+const btnPreviousTutorial = document.querySelector('#btn-previous-tutorial')
+const btnSkipTutorial = document.querySelector('#btn-skip-tutorial')
+
+// Tutorial content
+const tutorialSteps = [
+    {
+        title: 'Chào mừng đến với LinkedList!',
+        content: `
+            <p>Chào mừng bạn đến với công cụ trực quan hóa <strong>Linked List</strong>!</p>
+            <p>Linked List là một cấu trúc dữ liệu tuyến tính, trong đó các phần tử không được lưu trữ liên tiếp trong bộ nhớ mà được liên kết với nhau thông qua con trỏ.</p>
+            <h4><i class="bi bi-bullseye text-primary"></i> Mục tiêu của tutorial này:</h4>
+            <ul>
+                <li>Hiểu cấu trúc cơ bản của Linked List</li>
+                <li>Nắm vững các thao tác cơ bản</li>
+                <li>Trực quan hóa cách hoạt động của từng thao tác</li>
+            </ul>
+        `,
+    },
+    {
+        title: 'Cấu trúc Linked List',
+        content: `
+            <p>Một Linked List bao gồm các <strong>Node</strong>, mỗi node có hai phần:</p>
+            <h4><i class="bi bi-box text-primary"></i> Cấu trúc Node:</h4>
+            <ul>
+                <li><code>value</code>: Giá trị dữ liệu của node</li>
+                <li><code>next</code>: Con trỏ trỏ đến node tiếp theo</li>
+            </ul>
+            <h4><i class="bi bi-link-45deg text-primary"></i> Đặc điểm:</h4>
+            <ul>
+                <li><strong>Head</strong>: Node đầu tiên của danh sách</li>
+                <li><strong>Tail</strong>: Node cuối cùng của danh sách</li>
+                <li>Node cuối cùng có <code>next = null</code></li>
+            </ul>
+        `,
+    },
+    {
+        title: 'Thao tác Add (Thêm)',
+        content: `
+            <p>Có nhiều cách để thêm node vào Linked List:</p>
+            <h4><i class="bi bi-plus-circle text-success"></i> Các phương thức Add:</h4>
+            <ul>
+                <li><strong>Add Head</strong>: Thêm node vào đầu danh sách - O(1)</li>
+                <li><strong>Add Tail</strong>: Thêm node vào cuối danh sách - O(1)</li>
+                <li><strong>Add at Index</strong>: Thêm node tại vị trí chỉ định - O(n)</li>
+                <li><strong>Add Before/After</strong>: Thêm trước/sau một node cụ thể - O(n)</li>
+            </ul>
+            <p><i class="bi bi-lightbulb text-warning"></i> <em>Sử dụng nút <strong>Add</strong> trên toolbar để thực hành!</em></p>
+        `,
+    },
+    {
+        title: 'Thao tác Remove (Xóa)',
+        content: `
+            <p>Xóa node khỏi Linked List cũng có nhiều cách:</p>
+            <h4><i class="bi bi-dash-circle text-danger"></i> Các phương thức Remove:</h4>
+            <ul>
+                <li><strong>Remove Head</strong>: Xóa node đầu tiên - O(1)</li>
+                <li><strong>Remove Tail</strong>: Xóa node cuối cùng - O(n)</li>
+                <li><strong>Remove at Index</strong>: Xóa node tại vị trí chỉ định - O(n)</li>
+                <li><strong>Remove Node</strong>: Xóa một node cụ thể - O(n)</li>
+            </ul>
+            <p><i class="bi bi-lightbulb text-warning"></i> <em>Khi xóa node, cần liên kết lại các node còn lại bằng cách cập nhật con trỏ <code>next</code></em></p>
+        `,
+    },
+    {
+        title: 'Thao tác Search (Tìm kiếm)',
+        content: `
+            <p>Tìm kiếm trong Linked List luôn cần duyệt tuần tự từ đầu:</p>
+            <h4><i class="bi bi-search text-info"></i> Các phương thức Search:</h4>
+            <ul>
+                <li><strong>Search by Value</strong>: Tìm node theo giá trị - O(n)</li>
+                <li><strong>Search by Index</strong>: Lấy node tại vị trí - O(n)</li>
+            </ul>
+            <h4><i class="bi bi-stopwatch text-primary"></i> Độ phức tạp:</h4>
+            <p>Không giống như mảng (Array), Linked List không hỗ trợ truy cập trực tiếp theo chỉ số. Phải duyệt từ <code>head</code> cho đến vị trí cần tìm.</p>
+        `,
+    },
+    {
+        title: 'Các chức năng khác',
+        content: `
+            <p>Ngoài Add, Remove, Search còn có các thao tác tiện ích:</p>
+            <h4><i class="bi bi-tools text-primary"></i> Utility Functions:</h4>
+            <ul>
+                <li><strong>Random</strong>: Tạo danh sách ngẫu nhiên (1-25 nodes)</li>
+                <li><strong>Clear</strong>: Xóa toàn bộ danh sách</li>
+                <li><strong>Is Empty</strong>: Kiểm tra danh sách rỗng - O(1)</li>
+                <li><strong>Size</strong>: Đếm số lượng node - O(n)</li>
+            </ul>
+            <h4><i class="bi bi-gear text-secondary"></i> Settings:</h4>
+            <ul>
+                <li><strong>Step Delay</strong>: Điều chỉnh tốc độ animation (100ms - 1000ms)</li>
+            </ul>
+        `,
+    },
+    {
+        title: 'Sẵn sàng bắt đầu!',
+        content: `
+            <p><i class="bi bi-trophy text-warning"></i> Bạn đã hoàn thành tutorial cơ bản về Linked List!</p>
+            <h4><i class="bi bi-hand-thumbs-up text-success"></i> Hãy bắt đầu thực hành:</h4>
+            <ul>
+                <li>Nhấn <strong>Random</strong> để tạo danh sách mẫu</li>
+                <li>Thử các thao tác <strong>Add</strong>, <strong>Remove</strong>, <strong>Search</strong></li>
+                <li>Quan sát animation để hiểu cách Linked List hoạt động</li>
+                <li>Xem <strong>Pseudocode</strong> ở sidebar bên phải</li>
+            </ul>
+            <p><i class="bi bi-pin-angle text-danger"></i> <em>Bạn có thể mở lại tutorial bất cứ lúc nào bằng nút <strong>Tutorial</strong>!</em></p>
+        `,
+    },
+]
+
+let currentTutorialStep = 0
+
+// Tutorial functions
+function showTutorial(step) {
+    if (step >= tutorialSteps.length) {
+        closeTutorial()
+        return
+    }
+    if (step < 0) {
+        step = 0
+    }
+
+    currentTutorialStep = step
+    const tutorialData = tutorialSteps[step]
+
+    tutorialTitle.textContent = tutorialData.title
+    tutorialContent.innerHTML = tutorialData.content
+    tutorialProgress.textContent = `${step + 1} / ${tutorialSteps.length}`
+
+    // Update Next button text
+    if (step === tutorialSteps.length - 1) {
+        btnNextTutorial.textContent = 'Finish'
+    } else {
+        btnNextTutorial.textContent = 'Next'
+    }
+
+    // Show/hide Previous button
+    if (step === 0) {
+        btnPreviousTutorial.style.display = 'none'
+    } else {
+        btnPreviousTutorial.style.display = 'block'
+    }
+
+    tutorialOverlay.classList.add('active')
+}
+
+function closeTutorial() {
+    tutorialOverlay.classList.remove('active')
+    localStorage.setItem('linkedListTutorialCompleted', 'true')
+}
+
+function startTutorial() {
+    currentTutorialStep = 0
+    showTutorial(0)
+}
+
+// Tutorial event listeners
+btnTutorial.onclick = () => {
+    startTutorial()
+}
+
+btnNextTutorial.onclick = () => {
+    showTutorial(currentTutorialStep + 1)
+}
+
+btnPreviousTutorial.onclick = () => {
+    showTutorial(currentTutorialStep - 1)
+}
+
+btnSkipTutorial.onclick = () => {
+    closeTutorial()
+}
+
+tutorialOverlay.onclick = (e) => {
+    if (e.target === tutorialOverlay) {
+        closeTutorial()
+    }
+}
+
+// Check if tutorial was completed, if not show it on first load
+window.addEventListener('load', () => {
+    const tutorialCompleted = localStorage.getItem('linkedListTutorialCompleted')
+    if (!tutorialCompleted) {
+        setTimeout(() => startTutorial(), 500)
+    }
+})
+
 // Toggle sidebar
 toggleSidebarBtn.onclick = () => {
     sidebarVisible = !sidebarVisible
-    
+
     if (sidebarVisible) {
         sidebarOverlay.classList.add('open')
         toggleSidebarBtn.innerHTML = '<i class="bi bi-chevron-right"></i>'
@@ -96,7 +290,7 @@ btnAdd.onclick = () => {
         const modalWidth = modalAdd.offsetWidth || 200
         const left = rect.left
         const top = rect.bottom + 10
-        
+
         modalAdd.style.left = `${left}px`
         modalAdd.style.top = `${top}px`
         modalAdd.style.transform = 'none'
@@ -121,7 +315,7 @@ btnRemove.onclick = () => {
         const modalWidth = modalRemove.offsetWidth || 200
         const left = rect.left
         const top = rect.bottom + 10
-        
+
         modalRemove.style.left = `${left}px`
         modalRemove.style.top = `${top}px`
         modalRemove.style.transform = 'none'
@@ -303,7 +497,7 @@ const pseudocodes = {
      tmp.next = tmp.next.next
   <span style="color: #0066cc;">7.</span> <span style="color: #cc0066;">return</span> removed`,
 
-    default: `<span style="color: #008800;">// Chọn một chức năng để xem mã giả...</span>`
+    default: `<span style="color: #008800;">// Chọn một chức năng để xem mã giả...</span>`,
 }
 
 function showPseudocode(type) {
@@ -344,54 +538,56 @@ inputRemoveIndex.addEventListener('keypress', (e) => {
 
 btnAddHead.onclick = () => {
     showPseudocode('addHead')
-    addNode('addHead')
+    handleAddNode('addHead')
     overlayAdd.click()
 }
 btnAddTail.onclick = () => {
     showPseudocode('addTail')
-    addNode('addTail')
+    handleAddNode('addTail')
     overlayAdd.click()
 }
-btnAddIndex.onclick = () => {
+btnAddIndex.onclick = async () => {
     const index = parseInt(inputAddIndex.value)
     if (isNaN(index) || index < 0) {
         Swal.fire({
             icon: 'error',
             title: 'Lỗi!',
             text: 'Vui lòng nhập index hợp lệ!',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
     showPseudocode('addByIndex')
-    addNode('addByIndex', index)
+    await handleAddNode('addByIndex', index)
     overlayAdd.click()
     inputAddIndex.value = ''
 }
 btnRemoveHead.onclick = () => {
     showPseudocode('removeHead')
-    removeNode('removeHead')
+    handleRemoveNode('removeHead')
     overlayRemove.click()
 }
 btnRemoveTail.onclick = () => {
     showPseudocode('removeTail')
-    removeNode('removeTail')
+    handleRemoveNode('removeTail')
     overlayRemove.click()
 }
-btnRemoveIndex.onclick = () => {
+btnRemoveIndex.onclick = async () => {
     const index = parseInt(inputRemoveIndex.value)
     if (isNaN(index) || index < 0) {
         Swal.fire({
             icon: 'error',
             title: 'Lỗi!',
             text: 'Vui lòng nhập index hợp lệ!',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
     showPseudocode('removeByIndex')
-    removeNode('removeByIndex', index)
-    overlayRemove.click()
+    // Close the remove modal before executing deletion animation
+    if (overlayRemove.classList.contains('active')) overlayRemove.classList.remove('active')
+    if (modalRemove.classList.contains('display')) modalRemove.classList.remove('display')
+    await handleRemoveNode('removeByIndex', index)
     inputRemoveIndex.value = ''
 }
 btnAddBefore.onclick = () => {
@@ -399,14 +595,14 @@ btnAddBefore.onclick = () => {
     {
         const nodeElement = document.querySelector('.node.active')
         const node = list.searchByID(nodeElement.dataset.id)
-        addNode('addBefore', node)
+        handleAddNode('addBefore', node)
     }
 }
 btnAddAfter.onclick = () => {
     showPseudocode('addAfter')
     const nodeElement = document.querySelector('.node.active')
     const node = list.searchByID(nodeElement.dataset.id)
-    addNode('addAfter', node)
+    handleAddNode('addAfter', node)
 }
 
 // save list to localstorage
@@ -452,10 +648,7 @@ function renderList(timeOutRemoveBlock = 0) {
 
     while (tmp !== null) {
         const classList = tmp.isNew ? 'node new' : 'node'
-        const classArrow =
-            tmp.isNew || (tmp.next !== null && tmp.next.isNew)
-                ? 'arrow new'
-                : 'arrow'
+        const classArrow = tmp.isNew || (tmp.next !== null && tmp.next.isNew) ? 'arrow new' : 'arrow'
 
         area.innerHTML += `
             <div class="${classList}" data-id="${tmp.id}" >
@@ -495,13 +688,13 @@ function renderList(timeOutRemoveBlock = 0) {
 }
 
 // handle add node
-function addNode(method, node) {
+async function handleAddNode(method, node) {
     if (list.size() >= 25) {
         Swal.fire({
             icon: 'warning',
             title: 'Đã đầy!',
             text: 'Số node tối đa là 25',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
@@ -510,8 +703,7 @@ function addNode(method, node) {
     let value = inputValueAdd ? inputValueAdd.value : ''
     if (!overlayAdd.classList.contains('active')) {
         // fallback to node modal value when adding before/after
-        if (document.querySelector('.node-modal').classList.contains('display'))
-            value = inputValueModal.value
+        if (document.querySelector('.node-modal').classList.contains('display')) value = inputValueModal.value
     }
 
     value = value.trim()
@@ -520,7 +712,7 @@ function addNode(method, node) {
             icon: 'error',
             title: 'Lỗi!',
             text: 'Vui lòng nhập giá trị!',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         if (inputValueAdd) inputValueAdd.value = ''
         if (inputValueAdd) inputValueAdd.focus()
@@ -534,6 +726,32 @@ function addNode(method, node) {
         list.addTail(value)
         list.tail.isNew = true
     } else if (method === 'addByIndex') {
+        // Highlight traversal to index-1
+        overlayAdd.click()
+        busyOverlayElement.classList.add('block')
+        let tmp = list.head
+        let currentIndex = 0
+        const targetPrevIndex = node - 1
+
+        while (tmp !== null && currentIndex < targetPrevIndex) {
+            const nodeElement = document.querySelector(`.node[data-id="${tmp.id}"]`)
+            if (nodeElement) nodeElement.classList.add('active')
+            await new Promise((resolve) => setTimeout(resolve, animationDelay))
+            if (nodeElement) nodeElement.classList.remove('active')
+            tmp = tmp.next
+            currentIndex++
+        }
+
+        // Highlight the node right before index (prev node) before insertion
+        if (targetPrevIndex >= 0) {
+            const prevEl = tmp ? document.querySelector(`.node[data-id="${tmp.id}"]`) : null
+            if (prevEl) {
+                prevEl.classList.add('active')
+                await new Promise((resolve) => setTimeout(resolve, animationDelay))
+                prevEl.classList.remove('active')
+            }
+        }
+
         const newNode = list.addByIndex(node, value)
         if (newNode) {
             newNode.isNew = true
@@ -542,8 +760,9 @@ function addNode(method, node) {
                 icon: 'error',
                 title: 'Lỗi!',
                 text: 'Index không hợp lệ!',
-                confirmButtonColor: '#3498db'
+                confirmButtonColor: '#3498db',
             })
+            busyOverlayElement.classList.remove('block')
             return
         }
     } else if (method === 'addBefore') {
@@ -559,7 +778,7 @@ function addNode(method, node) {
             icon: 'error',
             title: 'Lỗi!',
             text: 'Phương thức không hợp lệ!',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
@@ -573,7 +792,7 @@ function addNode(method, node) {
 }
 
 // handle remove node
-function removeNode(method, node) {
+async function handleRemoveNode(method, node) {
     if (list.head === null) return
 
     let nodeElement
@@ -586,37 +805,80 @@ function removeNode(method, node) {
         nodeElement = document.querySelector(`.node[data-id="${list.tail.id}"]`)
         list.removeTail()
     } else if (method === 'removeByIndex') {
+        // Highlight traversal to index
+        busyOverlayElement.classList.add('block')
+        let tmp = list.head
+        let currentIndex = 0
+        while (tmp !== null && currentIndex < node) {
+            const nodeElementTrav = document.querySelector(`.node[data-id="${tmp.id}"]`)
+            if (nodeElementTrav) nodeElementTrav.classList.add('active')
+            await new Promise((resolve) => setTimeout(resolve, animationDelay))
+            if (nodeElementTrav) nodeElementTrav.classList.remove('active')
+            tmp = tmp.next
+            currentIndex++
+        }
+
+        // Highlight the target node at index before deletion
+        const targetNode = tmp
+        const targetEl = targetNode ? document.querySelector(`.node[data-id="${targetNode.id}"]`) : null
+        if (targetEl) {
+            targetEl.classList.add('active')
+            await new Promise((resolve) => setTimeout(resolve, animationDelay))
+            targetEl.classList.remove('active')
+        }
+
         const removed = list.removeByIndex(node)
         if (!removed) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
                 text: 'Index không hợp lệ!',
-                confirmButtonColor: '#3498db'
+                confirmButtonColor: '#3498db',
             })
+            busyOverlayElement.classList.remove('block')
             return
         }
         nodeElement = document.querySelector(`.node[data-id="${removed.id}"]`)
     } else if (method === 'node') {
         showPseudocode('removeNode')
+        // Hide modal and selected node highlight before animation
+        const selectedEl = document.querySelector(`.node[data-id="${node.id}"]`)
+        if (selectedEl) selectedEl.classList.remove('active')
+        if (overlayElement.classList.contains('active')) overlayElement.classList.remove('active')
+        if (modalElement.classList.contains('display')) modalElement.classList.remove('display')
+
+        // Highlight traversal from head to selected node
+        busyOverlayElement.classList.add('block')
+        let tmp = list.head
+        while (tmp !== null && tmp.id !== node.id) {
+            const nodeElementTrav = document.querySelector(`.node[data-id="${tmp.id}"]`)
+            if (nodeElementTrav) nodeElementTrav.classList.add('active')
+            await new Promise((resolve) => setTimeout(resolve, animationDelay))
+            if (nodeElementTrav) nodeElementTrav.classList.remove('active')
+            tmp = tmp.next
+        }
+        // Highlight the target node itself before deletion
         nodeElement = document.querySelector(`.node[data-id="${node.id}"]`)
+        if (nodeElement) {
+            nodeElement.classList.add('active')
+            await new Promise((resolve) => setTimeout(resolve, animationDelay))
+            nodeElement.classList.remove('active')
+        }
         list.removeNode(node)
-        overlayElement.click()
+        // overlay already hidden above
     } else {
         Swal.fire({
             icon: 'error',
             title: 'Lỗi!',
             text: 'Phương thức không hợp lệ!',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
 
-    if (nodeElement && nodeElement.previousElementSibling)
-        arrowElements.push(nodeElement.previousElementSibling)
+    if (nodeElement && nodeElement.previousElementSibling) arrowElements.push(nodeElement.previousElementSibling)
 
-    if (nodeElement && nodeElement.nextElementSibling)
-        arrowElements.push(nodeElement.nextElementSibling)
+    if (nodeElement && nodeElement.nextElementSibling) arrowElements.push(nodeElement.nextElementSibling)
 
     busyOverlayElement.classList.add('block')
     saveList()
@@ -652,7 +914,7 @@ area.onclick = (e) => {
         document.querySelector('.node-name').innerText = `Node ${node.value}`
 
         btnRemoveNode.onclick = () => {
-            removeNode('node', node)
+            handleRemoveNode('node', node)
         }
     }
 }
@@ -688,25 +950,44 @@ btnClear.onclick = () => {
 btnCheckEmpty.onclick = () => {
     showPseudocode('isEmpty')
     const isEmpty = list.isEmpty()
+    if (!isEmpty) {
+        // Highlight head briefly to indicate check
+        const headEl = document.querySelector('.node')
+        if (headEl) {
+            headEl.classList.add('active')
+            setTimeout(() => headEl.classList.remove('active'), animationDelay)
+        }
+    }
     Swal.fire({
         icon: 'info',
         title: 'Kiểm tra rỗng',
-        html: isEmpty 
-            ? '<p class="mb-0">Danh sách <strong class="text-success">RỖNG</strong></p>' 
-            : '<p class="mb-0">Danh sách <strong class="text-danger">KHÔNG RỖNG</strong></p>',
-        confirmButtonColor: '#3498db'
+        html: isEmpty ? '<p class="mb-0">Danh sách <strong class="text-success">RỖNG</strong></p>' : '<p class="mb-0">Danh sách <strong class="text-danger">KHÔNG RỖNG</strong></p>',
+        confirmButtonColor: '#3498db',
     })
 }
 
 // Get size
-btnGetSize.onclick = () => {
+btnGetSize.onclick = async () => {
     showPseudocode('size')
-    const size = list.size()
+    // Traverse and highlight each node during count
+    let tmp = list.head
+    let count = 0
+    busyOverlayElement.classList.add('block')
+    while (tmp !== null) {
+        const nodeElement = document.querySelector(`.node[data-id="${tmp.id}"]`)
+        if (nodeElement) nodeElement.classList.add('active')
+        await new Promise((resolve) => setTimeout(resolve, animationDelay))
+        if (nodeElement) nodeElement.classList.remove('active')
+        count++
+        tmp = tmp.next
+    }
+    busyOverlayElement.classList.remove('block')
+    const size = count
     Swal.fire({
         icon: 'info',
         title: 'Kích thước danh sách',
         html: `<p class="mb-0">Số lượng node: <strong class="text-primary fs-3">${size}</strong></p>`,
-        confirmButtonColor: '#3498db'
+        confirmButtonColor: '#3498db',
     })
 }
 
@@ -714,14 +995,14 @@ btnGetSize.onclick = () => {
 btnCreateRandom.onclick = () => {
     showPseudocode('default')
     overlayCreateRandom.classList.add('active')
-    
+
     // Tính toán vị trí sau khi modal đã hiển thị
     requestAnimationFrame(() => {
         const rect = btnCreateRandom.getBoundingClientRect()
         const modalWidth = modalCreateRandom.offsetWidth || 350
         const left = rect.left
         const top = rect.bottom + 10
-        
+
         modalCreateRandom.style.left = `${left}px`
         modalCreateRandom.style.top = `${top}px`
         modalCreateRandom.style.transform = 'none'
@@ -759,34 +1040,33 @@ btnGo.onclick = async () => {
             icon: 'warning',
             title: 'Không hợp lệ!',
             text: 'Số lượng node hợp lệ là từ 1 đến 25!',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
 
     overlayCreateRandom.click()
-    
-    // Clear với animation nếu có node
+
     if (list.head !== null) {
         const nodeElements = document.querySelectorAll('.node')
         nodeElements.forEach((node) => {
             node.classList.add('clear')
         })
-        await new Promise(resolve => setTimeout(resolve, animationDelay))
+        await new Promise((resolve) => setTimeout(resolve, animationDelay))
         list.clear()
     }
-    
+
     // Tạo list với animation từng node
     const numbersRandom = generateRandomIntegers(n)
     busyOverlayElement.classList.add('block')
-    
+
     for (let i = 0; i < numbersRandom.length; i++) {
         const node = list.addTail(numbersRandom[i])
         node.isNew = true
         renderList()
-        await new Promise(resolve => setTimeout(resolve, animationDelay))
+        await new Promise((resolve) => setTimeout(resolve, animationDelay))
     }
-    
+
     busyOverlayElement.classList.remove('block')
     saveList()
 }
@@ -794,14 +1074,14 @@ btnGo.onclick = async () => {
 // Search modal
 btnSearchValue.onclick = () => {
     overlaySearch.classList.add('active')
-    
+
     // Tính toán vị trí sau khi modal đã hiển thị
     requestAnimationFrame(() => {
         const rect = btnSearchValue.getBoundingClientRect()
         const modalWidth = modalSearch.offsetWidth || 400
         const left = rect.left
         const top = rect.bottom + 10
-        
+
         modalSearch.style.left = `${left}px`
         modalSearch.style.top = `${top}px`
         modalSearch.style.transform = 'none'
@@ -820,14 +1100,24 @@ overlaySearch.onclick = () => {
 
 // Search by value
 btnSearchByValue.onclick = async () => {
-    showPseudocode('search')
     const value = inputSearchValue.value.trim()
+    handleSearchByValue(value)
+}
+
+// Search by index
+btnSearchByIndex.onclick = async () => {
+    const index = Number(inputSearchIndex.value)
+    handleSearchByIndex(index)
+}
+
+async function handleSearchByValue(value) {
+    showPseudocode('search')
     if (value === '') {
         Swal.fire({
             icon: 'warning',
             title: 'Thiếu thông tin!',
             text: 'Vui lòng nhập giá trị cần tìm!',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
@@ -837,13 +1127,13 @@ btnSearchByValue.onclick = async () => {
             icon: 'info',
             title: 'Danh sách rỗng!',
             text: 'Không có node nào để tìm kiếm.',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
 
     // Xóa highlight cũ
-    document.querySelectorAll('.node.active').forEach(node => {
+    document.querySelectorAll('.node.active').forEach((node) => {
         node.classList.remove('active')
     })
 
@@ -851,16 +1141,14 @@ btnSearchByValue.onclick = async () => {
     busyOverlayElement.classList.add('block')
 
     let tmp = list.head
-    let found = false
 
     while (tmp !== null) {
         const nodeElement = document.querySelector(`.node[data-id="${tmp.id}"]`)
         nodeElement.classList.add('active')
-        
-        await new Promise(resolve => setTimeout(resolve, animationDelay))
-        
+
+        await new Promise((resolve) => setTimeout(resolve, animationDelay))
+
         if (tmp.value == value) {
-            found = true
             busyOverlayElement.classList.remove('block')
             inputSearchValue.value = ''
             const foundNodeElement = nodeElement
@@ -868,7 +1156,7 @@ btnSearchByValue.onclick = async () => {
                 icon: 'info',
                 title: 'Tìm thấy!',
                 text: `Giá trị "${value}" đã được tìm thấy!`,
-                confirmButtonColor: '#3498db'
+                confirmButtonColor: '#3498db',
             }).then(() => {
                 setTimeout(() => {
                     foundNodeElement.classList.remove('active')
@@ -876,7 +1164,7 @@ btnSearchByValue.onclick = async () => {
             })
             return
         }
-        
+
         nodeElement.classList.remove('active')
         tmp = tmp.next
     }
@@ -887,21 +1175,19 @@ btnSearchByValue.onclick = async () => {
         icon: 'info',
         title: 'Không tìm thấy!',
         text: `Không tìm thấy giá trị "${value}" trong danh sách.`,
-        confirmButtonColor: '#3498db'
+        confirmButtonColor: '#3498db',
     })
 }
 
-// Search by index
-btnSearchByIndex.onclick = async () => {
+async function handleSearchByIndex(index) {
     showPseudocode('searchByIndex')
-    const index = Number(inputSearchIndex.value)
-    
+
     if (inputSearchIndex.value === '') {
         Swal.fire({
             icon: 'warning',
             title: 'Thiếu thông tin!',
             text: 'Vui lòng nhập index!',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
@@ -911,7 +1197,7 @@ btnSearchByIndex.onclick = async () => {
             icon: 'error',
             title: 'Lỗi!',
             text: 'Index phải lớn hơn hoặc bằng 0!',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
@@ -921,7 +1207,7 @@ btnSearchByIndex.onclick = async () => {
             icon: 'info',
             title: 'Danh sách rỗng!',
             text: 'Không có node nào để tìm kiếm.',
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
@@ -932,13 +1218,13 @@ btnSearchByIndex.onclick = async () => {
             icon: 'warning',
             title: 'Index không hợp lệ!',
             text: `Index vượt quá kích thước danh sách! (0 - ${size - 1})`,
-            confirmButtonColor: '#3498db'
+            confirmButtonColor: '#3498db',
         })
         return
     }
 
     // Xóa highlight cũ
-    document.querySelectorAll('.node.active').forEach(node => {
+    document.querySelectorAll('.node.active').forEach((node) => {
         node.classList.remove('active')
     })
 
@@ -951,9 +1237,9 @@ btnSearchByIndex.onclick = async () => {
     while (tmp !== null) {
         const nodeElement = document.querySelector(`.node[data-id="${tmp.id}"]`)
         nodeElement.classList.add('active')
-        
-        await new Promise(resolve => setTimeout(resolve, animationDelay))
-        
+
+        await new Promise((resolve) => setTimeout(resolve, animationDelay))
+
         if (currentIndex === index) {
             busyOverlayElement.classList.remove('block')
             inputSearchIndex.value = ''
@@ -962,7 +1248,7 @@ btnSearchByIndex.onclick = async () => {
                 icon: 'info',
                 title: 'Tìm thấy!',
                 text: `Node tại index ${index} có giá trị "${tmp.value}"`,
-                confirmButtonColor: '#3498db'
+                confirmButtonColor: '#3498db',
             }).then(() => {
                 setTimeout(() => {
                     foundNodeElement.classList.remove('active')
@@ -970,7 +1256,7 @@ btnSearchByIndex.onclick = async () => {
             })
             return
         }
-        
+
         nodeElement.classList.remove('active')
         tmp = tmp.next
         currentIndex++
@@ -979,4 +1265,3 @@ btnSearchByIndex.onclick = async () => {
     busyOverlayElement.classList.remove('block')
     inputSearchIndex.value = ''
 }
-
