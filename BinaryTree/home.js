@@ -324,6 +324,7 @@ let translateY = 0;
 let lastAddedNode = null;
 let nodesToRemove = [];
 let isAnimating = false;
+let initialTreeSnapshot = null; // Lưu trạng thái cây ban đầu
 
 // Animation control variables
 let animationState = {
@@ -584,33 +585,41 @@ function updateTree(animate = false) {
     const isAddingNewNode = lastAddedNode !== null;
     
     if (isAddingNewNode) {
-        // Di chuyển nodes cũ trước
-        nodeSelection
-            .transition()
-            .duration(400)
-            .ease(d3.easeCubicInOut)
-            .attr('transform', d => `translate(${d.x},${d.y})`)
-            .on('end', function() {
-                // Bước 2: Sau khi di chuyển xong, hiện node mới
-                nodeEnter
-                    .transition()
-                    .duration(300)
-                    .ease(d3.easeBackOut)
-                    .attr('transform', d => `translate(${d.x},${d.y}) scale(1)`)
-                    .attr('opacity', 1)
-                    .on('end', function() {
-                        // Bước 3: Sau khi node mới xuất hiện, vẽ link
-                        if (newNodeLink) {
-                            linkEnter.filter(d => d.target === lastAddedNode)
-                                .transition()
-                                .duration(300)
-                                .ease(d3.easeCubicOut)
-                                .attr('x2', d => d.target.x)
-                                .attr('y2', d => d.target.y)
-                                .attr('opacity', 1);
-                        }
-                    });
-            });
+        // Hàm để hiển thị node mới
+        const showNewNode = () => {
+            nodeEnter
+                .transition()
+                .duration(300)
+                .ease(d3.easeBackOut)
+                .attr('transform', d => `translate(${d.x},${d.y}) scale(1)`)
+                .attr('opacity', 1)
+                .on('end', function() {
+                    // Bước 3: Sau khi node mới xuất hiện, vẽ link
+                    if (newNodeLink) {
+                        linkEnter.filter(d => d.target === lastAddedNode)
+                            .transition()
+                            .duration(300)
+                            .ease(d3.easeCubicOut)
+                            .attr('x2', d => d.target.x)
+                            .attr('y2', d => d.target.y)
+                            .attr('opacity', 1);
+                    }
+                });
+        };
+        
+        // Kiểm tra nếu có nodes cũ thì di chuyển chúng trước
+        if (nodeSelection.size() > 0) {
+            // Di chuyển nodes cũ trước
+            nodeSelection
+                .transition()
+                .duration(400)
+                .ease(d3.easeCubicInOut)
+                .attr('transform', d => `translate(${d.x},${d.y})`)
+                .on('end', showNewNode);
+        } else {
+            // Không có nodes cũ (node đầu tiên), hiển thị node mới ngay
+            showNewNode();
+        }
         
         // Di chuyển TẤT CẢ links (cả cũ và mới ngoại trừ link đến node mới) cùng lúc với nodes
         linkEnter.filter(d => d.target !== lastAddedNode)
@@ -1047,71 +1056,71 @@ function updateStepResult(algorithmType, nodeIndex, currentNode, searchValue, pa
     
     if (algorithmType === 'search' || algorithmType === 'insert' || algorithmType === 'delete') {
         if (currentNode.value === searchValue) {
-            resultText += `✅ So sánh: ${currentNode.value} == ${searchValue}\n`;
+            resultText += `So sánh: ${currentNode.value} == ${searchValue}\n`;
             if (algorithmType === 'delete') {
-                resultText += `➜ Tìm thấy node cần xóa!`;
+                resultText += `Tìm thấy node cần xóa!`;
             } else {
-                resultText += `➜ Tìm thấy node cần tìm!`;
+                resultText += `Tìm thấy node cần tìm!`;
             }
         } else if (currentNode.value > searchValue) {
-            resultText += `📊 So sánh: ${currentNode.value} > ${searchValue}\n`;
-            resultText += `⬅️ Chuyển sang nhánh trái`;
+            resultText += `So sánh: ${currentNode.value} > ${searchValue}\n`;
+            resultText += `Chuyển sang nhánh trái`;
         } else {
-            resultText += `📊 So sánh: ${currentNode.value} < ${searchValue}\n`;
-            resultText += `➡️ Chuyển sang nhánh phải`;
+            resultText += `So sánh: ${currentNode.value} < ${searchValue}\n`;
+            resultText += `Chuyển sang nhánh phải`;
         }
     } else if (algorithmType === 'lowerBound') {
         if (currentNode.value >= searchValue) {
-            resultText += `📊 So sánh: ${currentNode.value} >= ${searchValue}\n`;
-            resultText += `✅ Cập nhật kết quả: ${currentNode.value}\n`;
-            resultText += `⬅️ Tiếp tục tìm giá trị nhỏ hơn ở nhánh trái`;
+            resultText += `So sánh: ${currentNode.value} >= ${searchValue}\n`;
+            resultText += `Cập nhật kết quả: ${currentNode.value}\n`;
+            resultText += `Tiếp tục tìm giá trị nhỏ hơn ở nhánh trái`;
         } else {
-            resultText += `📊 So sánh: ${currentNode.value} < ${searchValue}\n`;
-            resultText += `➡️ Chuyển sang nhánh phải`;
+            resultText += `So sánh: ${currentNode.value} < ${searchValue}\n`;
+            resultText += `Chuyển sang nhánh phải`;
         }
     } else if (algorithmType === 'upperBound') {
         if (currentNode.value > searchValue) {
-            resultText += `📊 So sánh: ${currentNode.value} > ${searchValue}\n`;
-            resultText += `✅ Cập nhật kết quả: ${currentNode.value}\n`;
-            resultText += `⬅️ Tiếp tục tìm giá trị nhỏ hơn ở nhánh trái`;
+            resultText += `So sánh: ${currentNode.value} > ${searchValue}\n`;
+            resultText += `Cập nhật kết quả: ${currentNode.value}\n`;
+            resultText += `Tiếp tục tìm giá trị nhỏ hơn ở nhánh trái`;
         } else {
-            resultText += `📊 So sánh: ${currentNode.value} <= ${searchValue}\n`;
-            resultText += `➡️ Chuyển sang nhánh phải`;
+            resultText += `So sánh: ${currentNode.value} <= ${searchValue}\n`;
+            resultText += `Chuyển sang nhánh phải`;
         }
     } else if (algorithmType === 'balance') {
         const bf = getBalanceFactor(currentNode);
         if (Math.abs(bf) > 1) {
-            resultText += `📍 Node: ${currentNode.value} (Độ lệch: ${bf})\n`;
-            resultText += `⚠️ Node mất cân bằng, cần xoay!`;
+            resultText += `Node: ${currentNode.value} (Độ lệch: ${bf})\n`;
+            resultText += `Node mất cân bằng, cần xoay!`;
         } else {
-            resultText += `📍 Node: ${currentNode.value} (Độ lệch: ${bf})\n`;
-            resultText += `✅ Node cân bằng, tiếp tục kiểm tra`;
+            resultText += `Node: ${currentNode.value} (Độ lệch: ${bf})\n`;
+            resultText += `Node cân bằng, tiếp tục kiểm tra`;
         }
     } else if (algorithmType === 'findMin') {
         if (currentNode.left !== null) {
-            resultText += `⬅️ Có nhánh trái, tiếp tục đi xuống\n`;
-            resultText += `➜ Giá trị nhỏ nhất nằm ở nhánh trái`;
+            resultText += `Có nhánh trái, tiếp tục đi xuống\n`;
+            resultText += `Giá trị nhỏ nhất nằm ở nhánh trái`;
         } else {
-            resultText += `✅ Không có nhánh trái\n`;
-            resultText += `➜ ${currentNode.value} là giá trị nhỏ nhất`;
+            resultText += `Không có nhánh trái\n`;
+            resultText += `${currentNode.value} là giá trị nhỏ nhất`;
         }
     } else if (algorithmType === 'findMax') {
         if (currentNode.right !== null) {
-            resultText += `➡️ Có nhánh phải, tiếp tục đi xuống\n`;
-            resultText += `➜ Giá trị lớn nhất nằm ở nhánh phải`;
+            resultText += `Có nhánh phải, tiếp tục đi xuống\n`;
+            resultText += `Giá trị lớn nhất nằm ở nhánh phải`;
         } else {
-            resultText += `✅ Không có nhánh phải\n`;
-            resultText += `➜ ${currentNode.value} là giá trị lớn nhất`;
+            resultText += `Không có nhánh phải\n`;
+            resultText += `${currentNode.value} là giá trị lớn nhất`;
         }
     } else if (algorithmType === 'preorder') {
-        resultText += `📝 Duyệt Pre-order (Gốc-Trái-Phải)\n`;
-        resultText += `✅ Thăm node: ${currentNode.value}`;
+        resultText += `Duyệt Pre-order (Gốc-Trái-Phải)\n`;
+        resultText += `Thăm node: ${currentNode.value}`;
     } else if (algorithmType === 'inorder') {
-        resultText += `📝 Duyệt In-order (Trái-Gốc-Phải)\n`;
-        resultText += `✅ Thăm node: ${currentNode.value}`;
+        resultText += `Duyệt In-order (Trái-Gốc-Phải)\n`;
+        resultText += `Thăm node: ${currentNode.value}`;
     } else if (algorithmType === 'postorder') {
-        resultText += `📝 Duyệt Post-order (Trái-Phải-Gốc)\n`;
-        resultText += `✅ Thăm node: ${currentNode.value}`;
+        resultText += `Duyệt Post-order (Trái-Phải-Gốc)\n`;
+        resultText += `Thăm node: ${currentNode.value}`;
     }
     
     resultContent.textContent = resultText;
@@ -1127,9 +1136,9 @@ function highlightCodeLine(algorithmType, nodeIndex, currentNode, searchValue, p
             highlightAlgorithmLine([0, 1]); // if this == null, return null
             const resultContent = document.getElementById('resultContent');
             if (algorithmType === 'search') {
-                resultContent.textContent = `❌ Kiểm tra: this == null\n➜ Không tìm thấy node trong cây`;
+                resultContent.textContent = `Kiểm tra: this == null\nKhông tìm thấy node trong cây`;
             } else {
-                resultContent.textContent = `✅ Kiểm tra: this == null\n➜ Tạo node mới tại đây`;
+                resultContent.textContent = `Kiểm tra: this == null\nTạo node mới tại đây`;
             }
         }
         return;
@@ -1365,8 +1374,9 @@ function findPathToLowerBound(target) {
         }
     }
     
-    // Chỉ trả về path đến kết quả, tất cả nodes đều satisfy
-    const path = resultPath.map(node => ({ node, satisfies: true }));
+    // Nếu tìm thấy, trả về path đến kết quả; nếu không, trả về tất cả path đã duyệt
+    const pathToUse = result ? resultPath : fullPath;
+    const path = pathToUse.map(node => ({ node, satisfies: true }));
     
     return { path, result };
 }
@@ -1390,8 +1400,9 @@ function findPathToUpperBound(target) {
         }
     }
     
-    // Chỉ trả về path đến kết quả, tất cả nodes đều satisfy
-    const path = resultPath.map(node => ({ node, satisfies: true }));
+    // Nếu tìm thấy, trả về path đến kết quả; nếu không, trả về tất cả path đã duyệt
+    const pathToUse = result ? resultPath : fullPath;
+    const path = pathToUse.map(node => ({ node, satisfies: true }));
     
     return { path, result };
 }
@@ -1661,7 +1672,7 @@ async function createRandomTree() {
     const nodeCount = parseInt(nodeCountInput.value);
     const treeType = treeTypeSelect.value;
     
-    if (!nodeCount || nodeCount < 1) {
+    if (isNaN(nodeCount) || nodeCountInput.value.trim() === '') {
         if (typeof Swal !== 'undefined') {
             Swal.fire({
                 toast: true,
@@ -1672,6 +1683,25 @@ async function createRandomTree() {
                 timer: 2000,
                 timerProgressBar: true
             });
+        } else {
+            alert('Vui lòng nhập số lượng nodes!');
+        }
+        return;
+    }
+    
+    if (nodeCount < 1) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Số lượng nodes phải lớn hơn 0!',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        } else {
+            alert('Số lượng nodes phải lớn hơn 0!');
         }
         return;
     }
@@ -1712,6 +1742,9 @@ async function createRandomTree() {
     
     // Tạo cây theo kiểu được chọn
     buildTreeByType(valuesArray, treeType);
+    
+    // Lưu snapshot cây ban đầu
+    saveInitialTreeSnapshot();
     
     updateTree(true);
 }
@@ -2004,6 +2037,11 @@ function resetAnimation() {
     animationState.currentStep = 0;
     animationState.totalSteps = 0;
     animationState.path = [];
+    animationState.algorithmType = null;
+    animationState.searchValue = null;
+    animationState.callback = null;
+    animationState.subStep = 0;
+    animationState.subStepsPerNode = 0;
     
     // Đưa cây về trạng thái thực trước khi reset
     if (animationState.algorithmType) {
@@ -2126,7 +2164,7 @@ async function insertNode() {
     const value = parseInt(valueInput.value);
     
     // Kiểm tra điều kiện trước khi hiển thị thuật toán
-    if (isNaN(value)) {
+    if (isNaN(value) || valueInput.value.trim() === '') {
         if (typeof Swal !== 'undefined') {
             Swal.fire({
                 toast: true,
@@ -2137,6 +2175,8 @@ async function insertNode() {
                 timer: 2000,
                 timerProgressBar: true
             });
+        } else {
+            alert('Vui lòng nhập giá trị hợp lệ!');
         }
         return;
     }
@@ -2182,7 +2222,7 @@ async function insertNode() {
             g.selectAll('.node').filter(d => d.value === value)
                 .classed('node-visited', true);
             
-            resultContent.textContent = `📌 Thêm node (${value})\n✖️ Giá trị đã tồn tại trong cây`;
+            resultContent.textContent = `Thêm node (${value})\nGiá trị đã tồn tại trong cây`;
         } else {
             // Insert node thật khi animation chạy tự động đến cuối
             lastAddedNode = bst.insert(value);
@@ -2206,7 +2246,7 @@ async function insertNode() {
                 }
             }, 350);
             
-            resultContent.textContent = `📌 Thêm node (${value})\n✔️ Đã thêm thành công vào cây`;
+            resultContent.textContent = `Thêm node (${value})\nĐã thêm thành công vào cây`;
             
             // Cập nhật input
             const nodeCount = bst.countNodes();
@@ -2244,7 +2284,7 @@ async function findNode() {
     const valueInput = document.getElementById('nodeValue');
     const value = parseInt(valueInput.value);
     
-    if (isNaN(value)) {
+    if (isNaN(value) || valueInput.value.trim() === '') {
         if (typeof Swal !== 'undefined') {
             Swal.fire({
                 toast: true,
@@ -2255,6 +2295,25 @@ async function findNode() {
                 timer: 2000,
                 timerProgressBar: true
             });
+        } else {
+            alert('Vui lòng nhập giá trị hợp lệ!');
+        }
+        return;
+    }
+    
+    if (!bst.root) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Cây đang rỗng!',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        } else {
+            alert('Cây đang rỗng!');
         }
         return;
     }
@@ -2273,7 +2332,7 @@ async function findNode() {
             const resultContent = document.getElementById('resultContent');
             // Highlight dòng "if this == null" và "return null" khi thất bại
             highlightAlgorithmLine([0, 1]);
-            resultContent.textContent = `📌 Tìm node (${value})\n✖️ Không tìm thấy trong cây (this == null)`;
+            resultContent.textContent = `Tìm node (${value})\nKhông tìm thấy trong cây (this == null)`;
         }, 'search', value);
         return;
     }
@@ -2289,7 +2348,7 @@ async function findNode() {
         g.selectAll('.node').filter(d => d.value === value)
             .classed('node-visited', true);
         
-        resultContent.textContent = `📌 Tìm node (${value})\n✔️ Đã tìm thấy trong cây`;
+        resultContent.textContent = `Tìm node (${value})\nĐã tìm thấy trong cây`;
     }, 'search', value);
 }
 
@@ -2615,7 +2674,37 @@ async function deleteSelectedNode() {
     const valueInput = document.getElementById('nodeValue');
     const value = parseInt(valueInput.value);
     
-    if (isNaN(value)) {
+    if (isNaN(value) || valueInput.value.trim() === '') {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Vui lòng nhập giá trị cần xóa!',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        } else {
+            alert('Vui lòng nhập giá trị cần xóa!');
+        }
+        return;
+    }
+    
+    if (!bst.root) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Cây đang rỗng!',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        } else {
+            alert('Cây đang rỗng!');
+        }
         return;
     }
     
@@ -2636,7 +2725,7 @@ async function deleteSelectedNode() {
             const resultContent = document.getElementById('resultContent');
             // Highlight dòng "if this == null" khi thất bại
             highlightAlgorithmLine([0, 1]);
-            resultContent.textContent = `📌 Xóa node (${value})\n✖️ Node không tồn tại trong cây (this == null)`;
+            resultContent.textContent = `Xóa node (${value})\nNode không tồn tại trong cây (this == null)`;
         }, 'delete', value);
         return;
     }
@@ -2734,7 +2823,7 @@ async function deleteSelectedNode() {
         const g = svg.select('#treeGroup');
         
         // Bước 1: Xóa các edge xung quanh node cần xóa
-        resultContent.textContent = `📌 Xóa node (${value})\n🔄 Bước 1: Xóa các edge của node ${value}`;
+        resultContent.textContent = `Xóa node (${value})\nBước 1: Xóa các edge của node ${value}`;
         
         g.selectAll('.link')
             .filter(d => d.source.value === value || d.target.value === value)
@@ -2744,7 +2833,7 @@ async function deleteSelectedNode() {
         
         // Bước 2: Xóa node cần xóa (fade out)
         setTimeout(() => {
-            resultContent.textContent = `📌 Xóa node (${value})\n🔄 Bước 2: Xóa node ${value}`;
+            resultContent.textContent = `Xóa node (${value})\nBước 2: Xóa node ${value}`;
             
             g.selectAll('.node')
                 .filter(d => d.value === value)
@@ -2766,7 +2855,7 @@ async function deleteSelectedNode() {
                 }
                 
                 if (replacementValue !== null) {
-                    resultContent.textContent = `📌 Xóa node (${value})\n🔄 Bước 3: Xóa edge từ cha đến node ${replacementValue}`;
+                    resultContent.textContent = `Xóa node (${value})\nBước 3: Xóa edge từ cha đến node ${replacementValue}`;
                     
                     // Chỉ xóa edge từ parent đến node thay thế, giữ lại edge đến children của nó
                     g.selectAll('.link')
@@ -2777,7 +2866,7 @@ async function deleteSelectedNode() {
                     
                     // Bước 4: Di chuyển node thay thế
                     setTimeout(() => {
-                        resultContent.textContent = `📌 Xóa node (${value})\n🔄 Bước 4: Di chuyển node ${replacementValue} lên vị trí mới`;
+                        resultContent.textContent = `Xóa node (${value})\nBước 4: Di chuyển node ${replacementValue} lên vị trí mới`;
                         
                         // Lấy vị trí của node gốc (node sẽ bị xóa)
                         const deletedNodeData = g.selectAll('.node').filter(d => d.value === value).data()[0];
@@ -2801,7 +2890,7 @@ async function deleteSelectedNode() {
                             updateTree();
                             
                             // Set result text TRƯỜC
-                            resultContent.textContent = `📌 Xóa node (${value})\n✅ Đã xóa và di chuyển node ${replacementValue}`;
+                            resultContent.textContent = `Xóa node (${value})\nĐã xóa và di chuyển node ${replacementValue}`;
                             
                             // Cập nhật input
                             const nodeCount = bst.countNodes();
@@ -2828,7 +2917,7 @@ async function deleteSelectedNode() {
                     }, 500);
                 } else {
                     // Trường hợp không có 2 con
-                    resultContent.textContent = `📌 Xóa node (${value})\n🔄 Bước 3: Nối lại cây`;
+                    resultContent.textContent = `Xóa node (${value})\nBước 3: Nối lại cây`;
                     
                     // Xóa node
                     deleteOneNode(value);
@@ -2838,7 +2927,7 @@ async function deleteSelectedNode() {
                     updateTree();
                     
                     // Set result text TRƯỜC
-                    resultContent.textContent = `📌 Xóa node (${value})\n✅ Đã xóa và nối lại cây`;
+                    resultContent.textContent = `Xóa node (${value})\nĐã xóa và nối lại cây`;
                     
                     // Cập nhật input
                     const nodeCount = bst.countNodes();
@@ -2888,8 +2977,105 @@ function clearTree() {
     bst.root = null;
     selectedNode = null;
     lastAddedNode = null;
+    initialTreeSnapshot = null; // Xóa snapshot khi xóa cây
     
     updateTree();
+}
+
+// Clone cấu trúc cây (deep copy)
+function cloneTreeStructure(node) {
+    if (!node) return null;
+    
+    const newNode = new TreeNode(node.value);
+    newNode.id = node.id;
+    newNode.depth = node.depth;
+    newNode.side = node.side;
+    newNode.hidden = node.hidden || false;
+    
+    newNode.left = cloneTreeStructure(node.left);
+    newNode.right = cloneTreeStructure(node.right);
+    
+    return newNode;
+}
+
+// Lưu snapshot của cây hiện tại làm trạng thái ban đầu
+function saveInitialTreeSnapshot() {
+    if (bst.root) {
+        initialTreeSnapshot = cloneTreeStructure(bst.root);
+    } else {
+        initialTreeSnapshot = null;
+    }
+}
+
+// Reset cây về trạng thái ban đầu
+async function resetTree() {
+    // Reset animation toàn bộ (bao gồm cả ẩn panels và control bar)
+    resetAnimation();
+    
+    clearHighlight();
+    
+    if (!initialTreeSnapshot) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'info',
+                title: 'Chưa có cây ban đầu để reset!',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        } else {
+            alert('Chưa có cây ban đầu để reset!');
+        }
+        return;
+    }
+    
+    // Ẩn TẤT CẢ các panels
+    const algorithmPanel = document.getElementById('algorithmPanel');
+    const resultPanel = document.getElementById('resultPanel');
+    const statsPanel = document.getElementById('statsPanel');
+    if (algorithmPanel) algorithmPanel.classList.add('collapsed');
+    if (resultPanel) {
+        resultPanel.classList.add('collapsed');
+        resultPanel.style.right = '-450px';
+    }
+    if (statsPanel) statsPanel.classList.add('collapsed');
+    
+    // Reset timeline slider về 0
+    const timelineSlider = document.getElementById('timelineSlider');
+    const stepIndicator = document.getElementById('stepIndicator');
+    const timeDisplay = document.getElementById('timeDisplay');
+    if (timelineSlider) {
+        timelineSlider.value = 0;
+        timelineSlider.max = 0;
+        timelineSlider.disabled = true;
+    }
+    if (stepIndicator) {
+        stepIndicator.textContent = '0/0';
+    }
+    if (timeDisplay) {
+        timeDisplay.textContent = '0:00';
+    }
+    
+    // Khôi phục cây từ snapshot
+    bst.root = cloneTreeStructure(initialTreeSnapshot);
+    selectedNode = null;
+    lastAddedNode = null;
+    
+    updateTree(true);
+    
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: '🔄 Đã reset về cây ban đầu!',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true
+        });
+    }
 }
 
 // Tính balance factor của node
@@ -3254,7 +3440,7 @@ async function balanceTree() {
     const unbalancedNodes = findUnbalancedNodes(bst.root);
     
     if (unbalancedNodes.length === 0) {
-        showResult('✅ Cây đã cân bằng\nKhông có node nào mất cân bằng');
+        showResult('Cây đã cân bằng\nKhông có node nào mất cân bằng');
         return;
     }
     
@@ -3282,7 +3468,7 @@ async function balanceTree() {
         // Bước 1: Kiểm tra node và tính độ lệch
         animationState.balanceSnapshots.push({
             tree: cloneTreeStructure(bst.root),
-            resultText: `📍 Kiểm tra node ${path[i].value}\nĐộ lệch: ${currentBf}`,
+            resultText: `Kiểm tra node ${path[i].value}\nĐộ lệch: ${currentBf}`,
             algoLines: [0, 1],
             nodeHighlight: path[i]
         });
@@ -3331,7 +3517,7 @@ async function balanceTree() {
     
     animationState.balanceSnapshots.push({
         tree: cloneTreeStructure(bst.root),
-        resultText: `🔍 Xác định loại xoay\n${rotationExplanation}`,
+        resultText: `Xác định loại xoay\n${rotationExplanation}`,
         algoLines: bf > 1 ? [3] : [5],
         nodeHighlight: targetNode,
         hideArrow: true
@@ -3342,7 +3528,7 @@ async function balanceTree() {
     const grandchildValue = grandchildNode ? grandchildNode.value : '?';
     animationState.balanceSnapshots.push({
         tree: cloneTreeStructure(bst.root),
-        resultText: `🔧 Chuẩn bị xoay ${rotationType}\nNode gốc: ${targetNode.value}\nCon: ${childValue}\nCháu: ${grandchildValue}`,
+        resultText: `Chuẩn bị xoay ${rotationType}\nNode gốc: ${targetNode.value}\nCon: ${childValue}\nCháu: ${grandchildValue}`,
         algoLines: bf > 1 ? [3] : [5],
         nodeHighlight: targetNode,
         hideArrow: true
@@ -3366,7 +3552,7 @@ async function balanceTree() {
         // Bước 1: Xoay trái node con trái
         animationState.balanceSnapshots.push({
             tree: cloneTreeStructure(bst.root),
-            resultText: `⏳ Xoay trái con trái\n${childValue} → ${grandchildValue}`,
+            resultText: `Xoay trái con trái\n${childValue} → ${grandchildValue}`,
             algoLines: [3],
             nodeHighlight: childNode,
             isRotationStep: true, // Đánh dấu step xoay
@@ -3379,7 +3565,7 @@ async function balanceTree() {
         const afterFirstRotateIndex = animationState.balanceSnapshots.length;
         animationState.balanceSnapshots.push({
             tree: cloneTreeStructure(bst.root),
-            resultText: `✓ Hoàn tất xoay trái\nTiếp tục xoay phải node gốc`,
+            resultText: `Hoàn tất xoay trái\nTiếp tục xoay phải node gốc`,
             algoLines: [3],
             nodeHighlight: targetNode,
             pauseAfter: true, // Đánh dấu cần delay sau step này
@@ -3393,7 +3579,7 @@ async function balanceTree() {
         // Bước 1: Xoay phải node con phải
         animationState.balanceSnapshots.push({
             tree: cloneTreeStructure(bst.root),
-            resultText: `⏳ Xoay phải con phải\n${childValue} → ${grandchildValue}`,
+            resultText: `Xoay phải con phải\n${childValue} → ${grandchildValue}`,
             algoLines: [5],
             nodeHighlight: childNode,
             isRotationStep: true, // Đánh dấu step xoay
@@ -3405,7 +3591,7 @@ async function balanceTree() {
         
         animationState.balanceSnapshots.push({
             tree: cloneTreeStructure(bst.root),
-            resultText: `✓ Hoàn tất xoay phải\nTiếp tục xoay trái node gốc`,
+            resultText: `Hoàn tất xoay phải\nTiếp tục xoay trái node gốc`,
             algoLines: [5],
             nodeHighlight: targetNode,
             pauseAfter: true, // Đánh dấu cần delay sau step này
@@ -3434,8 +3620,8 @@ async function balanceTree() {
     animationState.balanceSnapshots.push({
         tree: cloneTreeStructure(bst.root),
         resultText: rotationType === 'LR' || rotationType === 'RL' ? 
-            `⏳ Đang xoay ${rotationType === 'LR' ? 'phải' : 'trái'} node gốc...\n${targetNode.value} → ${newNode.value}` :
-            `⏳ Đang xoay ${rotationType}...\n${targetNode.value} → ${newNode.value}\nRoot mới: ${newNode.value}`,
+            `Đang xoay ${rotationType === 'LR' ? 'phải' : 'trái'} node gốc...\n${targetNode.value} → ${newNode.value}` :
+            `Đang xoay ${rotationType}...\n${targetNode.value} → ${newNode.value}\nRoot mới: ${newNode.value}`,
         algoLines: bf > 1 ? [3] : [5],
         nodeHighlight: newNode,
         isRotationStep: true, // Đánh dấu step xoay
@@ -3445,12 +3631,12 @@ async function balanceTree() {
     // 6. Snapshot hoàn tất - highlight dòng return
     const newBf = getBalanceFactor(newNode);
     const isBalanced = Math.abs(newBf) <= 1;
-    const balanceStatus = isBalanced ? '✔️ Đã cân bằng' : '⚠️ CẦN XOAY THÊM!';
+    const balanceStatus = isBalanced ? 'Đã cân bằng' : '⚠️ CẦN XOAY THÊM!';
     const warningNote = !isBalanced ? '\n\n⚠️ Cây vẫn chưa cân bằng\nCần tiếp tục cân bằng các node khác' : '';
     
     animationState.balanceSnapshots.push({
         tree: cloneTreeStructure(bst.root),
-        resultText: `✅ Xoay ${rotationType} thành công!\n${targetNode.value} → ${newNode.value}\nĐộ lệch mới: ${newBf}\n\n${balanceStatus}${warningNote}`,
+        resultText: `Xoay ${rotationType} thành công!\n${targetNode.value} → ${newNode.value}\nĐộ lệch mới: ${newBf}\n\n${balanceStatus}${warningNote}`,
         algoLines: [6],
         nodeHighlight: newNode,
         hideArrow: true
@@ -3552,7 +3738,7 @@ async function traverseTree(type) {
             'postorder': 'Post-order (Trái-Phải-Gốc)'
         };
         const values = traversalNodes.map(n => n.value).join(' → ');
-        resultContent.textContent = `✅ THÀNH CÔNG\n\n📌 Thao tác: Duyệt cây ${orderNames[type]}\n📝 Thứ tự: ${values}\n✔️ Trạng thái: Đã duyệt ${traversalNodes.length} node`;
+        resultContent.textContent = `THÀNH CÔNG\n\nThao tác: Duyệt cây ${orderNames[type]}\nThứ tự: ${values}\nTrạng thái: Đã duyệt ${traversalNodes.length} node`;
     }, type, null);
 }
 
@@ -3574,15 +3760,41 @@ async function findLowerBound() {
     const valueInput = document.getElementById('boundValue');
     const value = parseInt(valueInput.value);
     
-    showAlgorithm('lowerBound', value); // Hiển thị thuật toán
-    
-    if (isNaN(value)) {
+    if (isNaN(value) || valueInput.value.trim() === '') {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Vui lòng nhập giá trị hợp lệ!',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        } else {
+            alert('Vui lòng nhập giá trị hợp lệ!');
+        }
         return;
     }
     
     if (!bst.root) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Cây đang rỗng!',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        } else {
+            alert('Cây đang rỗng!');
+        }
         return;
     }
+    
+    showAlgorithm('lowerBound', value); // Hiển thị thuật toán
     
     const { path, result } = findPathToLowerBound(value);
     
@@ -3597,12 +3809,12 @@ async function findLowerBound() {
                 .classed('node-visited', true);
             
             const resultContent = document.getElementById('resultContent');
-            resultContent.textContent = `📌 Tìm Lower Bound (${value})\n✔️ Đã tìm thấy: ${result.value}\n(Giá trị nhỏ nhất >= ${value})`;
+            resultContent.textContent = `Tìm Lower Bound (${value})\nĐã tìm thấy: ${result.value}\n(Giá trị nhỏ nhất >= ${value})`;
         }, 'lowerBound', value);
     } else {
         animateTraversal(path, () => {
             const resultContent = document.getElementById('resultContent');
-            resultContent.textContent = `📌 Tìm Lower Bound (${value})\n✖️ Không có giá trị nào >= ${value}`;
+            resultContent.textContent = `Tìm Lower Bound (${value})\nKhông có giá trị nào >= ${value}`;
         }, 'lowerBound', value);
     }
 }
@@ -3625,15 +3837,41 @@ async function findUpperBound() {
     const valueInput = document.getElementById('boundValue');
     const value = parseInt(valueInput.value);
     
-    showAlgorithm('upperBound', value); // Hiển thị thuật toán
-    
-    if (isNaN(value)) {
+    if (isNaN(value) || valueInput.value.trim() === '') {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Vui lòng nhập giá trị hợp lệ!',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        } else {
+            alert('Vui lòng nhập giá trị hợp lệ!');
+        }
         return;
     }
     
     if (!bst.root) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Cây đang rỗng!',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        } else {
+            alert('Cây đang rỗng!');
+        }
         return;
     }
+    
+    showAlgorithm('upperBound', value); // Hiển thị thuật toán
     
     const { path, result } = findPathToUpperBound(value);
     
@@ -3648,12 +3886,12 @@ async function findUpperBound() {
                 .classed('node-visited', true);
             
             const resultContent = document.getElementById('resultContent');
-            resultContent.textContent = `📌 Tìm Upper Bound (${value})\n✔️ Đã tìm thấy: ${result.value}\n(Giá trị nhỏ nhất > ${value})`;
+            resultContent.textContent = `Tìm Upper Bound (${value})\nĐã tìm thấy: ${result.value}\n(Giá trị nhỏ nhất > ${value})`;
         }, 'upperBound', value);
     } else {
         animateTraversal(path, () => {
             const resultContent = document.getElementById('resultContent');
-            resultContent.textContent = `📌 Tìm Upper Bound (${value})\n✖️ Không có giá trị nào > ${value}`;
+            resultContent.textContent = `Tìm Upper Bound (${value})\nKhông có giá trị nào > ${value}`;
         }, 'upperBound', value);
     }
 }
@@ -3689,7 +3927,7 @@ async function findMin() {
                 .classed('node-visited', true);
             
             const resultContent = document.getElementById('resultContent');
-            resultContent.textContent = `📌 Tìm giá trị nhỏ nhất\n✔️ Đã tìm thấy: ${minNode.value}`;
+            resultContent.textContent = `Tìm giá trị nhỏ nhất\nĐã tìm thấy: ${minNode.value}`;
         }, 'findMin', null);
     }
 }
@@ -3724,7 +3962,7 @@ async function findMax() {
                 .classed('node-visited', true);
             
             const resultContent = document.getElementById('resultContent');
-            resultContent.textContent = `📌 Tìm giá trị lớn nhất\n✔️ Đã tìm thấy: ${maxNode.value}`;
+            resultContent.textContent = `Tìm giá trị lớn nhất\nĐã tìm thấy: ${maxNode.value}`;
         }, 'findMax', null);
     }
 }
@@ -3836,7 +4074,7 @@ function updateInfoPanel() {
     if (bst.isValidBST()) {
         const balanceFactor = bst.getBalanceFactor();
         const balancePercent = Math.round(balanceFactor * 100);
-        balanceStatus.textContent = `✓ ${balancePercent}%`;
+        balanceStatus.textContent = `${balancePercent}%`;
         balanceStatus.style.color = balanceFactor > 0.7 ? '#4cc9f0' : '#f8961e';
     } else {
         balanceStatus.textContent = '✗';
