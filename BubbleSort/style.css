@@ -13,32 +13,46 @@ body {
 
 /* Header */
 header {
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    background: linear-gradient(135deg, #FF6B6B, #EE5D68) !important; /* Different color theme for Bubble Sort */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #4361ee, #3a0ca3) !important;
     font-size: 1.5rem;
     font-weight: 700;
 }
 
+.function-card,
+.display-area {
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.03), rgba(67, 97, 238, 0.08)) !important;
+}
+
 .function-card {
-    background: linear-gradient(135deg, rgba(255, 107, 107, 0.05), rgba(238, 93, 104, 0.1)) !important;
     border: none !important;
     border-radius: 16px;
 }
 
 /* Toolbar */
 .toolbar .card {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(59, 37, 139, 0.22);
 }
 
 .display-area {
-    background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+    z-index: 10;
+    display: flex;
+    align-items: flex-end;
+    /* Different from LinkedList center, as bars need to align bottom */
+    justify-content: center;
+    min-height: 240px;
+    padding: 30px 50px;
+    /* flex-wrap: wrap; */
+    /* Removed wrap for Bubble Sort */
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.6) 100%);
     border-radius: 18px;
-    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(12px) saturate(1.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 20px 35px rgba(58, 36, 138, 0.20);
     margin: 20px auto;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.175);
     overflow: hidden;
 }
 
@@ -55,9 +69,9 @@ header {
     padding-bottom: 5px;
     font-size: 0.8rem;
     transition: height var(--animation-duration) ease,
-                background-color var(--animation-duration) ease,
-                transform var(--animation-duration) ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        background-color var(--animation-duration) ease,
+        transform var(--animation-duration) ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* States */
@@ -85,7 +99,7 @@ header {
     right: 0;
     width: 340px;
     height: calc(100vh - 70px);
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     z-index: 999;
     padding: 20px;
     transform: translateX(100%);
@@ -100,7 +114,7 @@ header {
     height: 100%;
     background: #fff;
     border-radius: 20px;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 #toggle-sidebar {
@@ -157,4 +171,121 @@ header {
     background-color: #f1c40f;
     display: block;
     width: 100%;
+}
+
+/* Tutorial Modal */
+.tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.tutorial-overlay.active {
+    display: flex;
+}
+
+.tutorial-modal {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease;
+}
+
+.tutorial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.tutorial-title {
+    margin: 0;
+    color: #4361ee;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.tutorial-progress {
+    background: #e9ecef;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #495057;
+}
+
+.tutorial-content {
+    margin: 25px 0;
+    color: #495057;
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+.tutorial-content h4 {
+    color: #4361ee;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.tutorial-content ul {
+    padding-left: 25px;
+}
+
+.tutorial-content li {
+    margin-bottom: 8px;
+}
+
+.tutorial-content code {
+    background: #f8f9fa;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #d63384;
+    font-family: 'Courier New', monospace;
+}
+
+.tutorial-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px solid #e9ecef;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }

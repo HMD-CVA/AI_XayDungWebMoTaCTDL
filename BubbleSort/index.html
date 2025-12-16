@@ -23,6 +23,8 @@
                 <div class="card-body function-card">
                     <div class="d-flex flex-wrap align-items-center gap-2">
                         <div class="d-flex flex-wrap align-items-center gap-2 flex-grow-1">
+                            <button id="btn-tutorial" class="btn btn-primary"><i class="bi bi-question-circle"></i>
+                                Tutorial</button>
                             <button id="btn-create-random" class="btn btn-warning"><i class="bi bi-shuffle"></i> Random
                                 Array</button>
                             <button id="btn-custom-input" class="btn btn-info"><i class="bi bi-keyboard"></i> Custom
@@ -103,6 +105,24 @@
                 <div class="input-group">
                     <input id="input-custom-data" class="form-control" type="text" placeholder="10, 20, 5, ...">
                     <button id="btn-custom-go" class="btn btn-primary"><i class="bi bi-check-lg"></i> Go</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Modal -->
+    <div class="tutorial-overlay">
+        <div class="tutorial-modal">
+            <div class="tutorial-header">
+                <h3 class="tutorial-title"></h3>
+                <span class="tutorial-progress"></span>
+            </div>
+            <div class="tutorial-content"></div>
+            <div class="tutorial-footer">
+                <button class="btn btn-outline-secondary" id="btn-previous-tutorial">Previous</button>
+                <div class="ms-auto d-flex gap-2">
+                    <button class="btn btn-secondary" id="btn-skip-tutorial">Skip All</button>
+                    <button class="btn btn-primary" id="btn-next-tutorial">Next</button>
                 </div>
             </div>
         </div>

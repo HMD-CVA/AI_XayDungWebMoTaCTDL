@@ -359,3 +359,163 @@ async function bubbleSort() {
 
     await highlightLine('line-13');
 }
+
+// --- Tutorial Logic ---
+
+const tutorialOverlay = document.querySelector(".tutorial-overlay");
+const tutorialModal = document.querySelector(".tutorial-modal");
+const tutorialTitle = document.querySelector(".tutorial-title");
+const tutorialContent = document.querySelector(".tutorial-content");
+const tutorialProgress = document.querySelector(".tutorial-progress");
+const btnTutorial = document.getElementById("btn-tutorial");
+const btnNextTutorial = document.getElementById("btn-next-tutorial");
+const btnPreviousTutorial = document.getElementById("btn-previous-tutorial");
+const btnSkipTutorial = document.getElementById("btn-skip-tutorial");
+
+const tutorialSteps = [
+    {
+        title: "Chào mừng đến với Bubble Sort Visualizer!",
+        content: `
+            <p>Xin chào! Công cụ này sẽ giúp bạn trực quan hóa và hiểu thuật toán <strong>Bubble Sort (Sắp xếp nổi bọt)</strong>.</p>
+            <p>Bubble Sort là một trong những thuật toán sắp xếp đơn giản nhất để hiểu và cài đặt.</p>
+            <h4><i class="bi bi-bullseye text-primary"></i> Mục tiêu:</h4>
+            <ul>
+                <li>Hiểu cách Bubble Sort so sánh và hoán đổi các phần tử.</li>
+                <li>Hình dung hiệu ứng "nổi bọt" của các phần tử lớn nhất.</li>
+                <li>Nắm vững độ phức tạp thời gian và logic hoạt động.</li>
+            </ul>
+        `
+    },
+    {
+        title: "Bubble Sort là gì?",
+        content: `
+            <p><strong>Bubble Sort</strong> là một thuật toán dựa trên so sánh.</p>
+            <h4><i class="bi bi-gear text-primary"></i> Cơ chế:</h4>
+            <ul>
+                <li>Nó lặp đi lặp lại qua danh sách.</li>
+                <li>So sánh các phần tử liền kề (các cặp).</li>
+                <li><strong>Hoán đổi</strong> chúng nếu chúng sai thứ tự (ví dụ: trái > phải).</li>
+            </ul>
+            <p>Qua từng lượt, phần tử chưa được sắp xếp lớn nhất sẽ "nổi" lên vị trí đúng của nó ở cuối danh sách.</p>
+        `
+    },
+    {
+        title: "Trực quan hóa",
+        content: `
+            <p>Trong trình trực quan hóa này:</p>
+            <ul>
+                <li><strong>Cột (Bars)</strong> đại diện cho các số trong mảng.</li>
+                <li><strong>Chiều cao</strong> tương ứng với giá trị (cao hơn = lớn hơn).</li>
+                <li><span style="color: #ff9a9e; font-weight: bold;">Hồng/Đỏ</span> nghĩa là các phần tử đang được <strong>so sánh</strong>.</li>
+                <li><span style="color: #a18cd1; font-weight: bold;">Tím</span> nghĩa là các phần tử đang được <strong>hoán đổi</strong>.</li>
+                <li><span style="color: #43e97b; font-weight: bold;">Xanh lá</span> nghĩa là phần tử đã được <strong>sắp xếp</strong>.</li>
+            </ul>
+        `
+    },
+    {
+        title: "Điều khiển & Tính năng",
+        content: `
+            <p>Khám phá thanh công cụ để điều khiển quá trình mô phỏng:</p>
+            <ul>
+                <li><strong>Random Array</strong>: Tạo mới một tập hợp các cột ngẫu nhiên.</li>
+                <li><strong>Custom Input</strong>: Nhập các số cụ thể của bạn để sắp xếp.</li>
+                <li><strong>Start Sort</strong>: Bắt đầu chạy mô phỏng.</li>
+                <li><strong>Speed Slider</strong>: Điều chỉnh tốc độ sắp xếp nhanh hay chậm.</li>
+                <li><strong>Reset</strong>: Dừng và đặt lại mảng.</li>
+            </ul>
+        `
+    },
+    {
+        title: "Sidebar Mã giả",
+        content: `
+            <p>Ở bên phải (hoặc nh click vào mũi tên <i class="bi bi-chevron-left"></i>), bạn sẽ thấy <strong>Mã giả (Pseudocode)</strong>.</p>
+            <p>Khi mô phỏng chạy, dòng mã hiện tại đang được thực thi sẽ được <span style="background-color: #f1c40f; padding: 2px 4px; border-radius: 4px;">highlight</span>.</p>
+            <p>Điều này giúp bạn kết nối hành động trực quan với logic thuật toán!</p>
+        `
+    },
+    {
+        title: "Sẵn sàng sắp xếp?",
+        content: `
+            <p>Bạn đã sẵn sàng! <i class="bi bi-rocket-takeoff text-success"></i></p>
+            <p>Hãy thử tạo mảng ngẫu nhiên hoặc nhập trường hợp khó (như danh sách giảm dần) và xem Bubble Sort xử lý.</p>
+            <p>Nh nhấn <strong>Start Sort</strong> bất cứ khi nào bạn sẵn sàng.</p>
+            <p><em>Bạn luôn có thể mở lại hướng dẫn này bằng cách nhấn nút <strong>Tutorial</strong>.</em></p>
+        `
+    }
+];
+
+let currentTutorialStep = 0;
+
+function showTutorial(step) {
+    if (step >= tutorialSteps.length) {
+        closeTutorial();
+        return;
+    }
+    if (step < 0) step = 0;
+
+    currentTutorialStep = step;
+    const data = tutorialSteps[step];
+
+    tutorialTitle.textContent = data.title;
+    tutorialContent.innerHTML = data.content;
+    tutorialProgress.textContent = `${step + 1} / ${tutorialSteps.length}`;
+
+    // Update buttons
+    if (step === tutorialSteps.length - 1) {
+        btnNextTutorial.textContent = "Finish";
+    } else {
+        btnNextTutorial.textContent = "Next";
+    }
+
+    if (step === 0) {
+        btnPreviousTutorial.style.display = "none";
+    } else {
+        btnPreviousTutorial.style.display = "block";
+    }
+
+    tutorialOverlay.classList.add("active");
+}
+
+function closeTutorial() {
+    tutorialOverlay.classList.remove("active");
+    localStorage.setItem("bubbleSortTutorialCompleted", "true");
+}
+
+function startTutorial() {
+    currentTutorialStep = 0;
+    showTutorial(0);
+}
+
+// Event Listeners for Tutorial
+if (btnTutorial) {
+    btnTutorial.onclick = startTutorial;
+}
+
+if (btnNextTutorial) {
+    btnNextTutorial.onclick = () => showTutorial(currentTutorialStep + 1);
+}
+
+if (btnPreviousTutorial) {
+    btnPreviousTutorial.onclick = () => showTutorial(currentTutorialStep - 1);
+}
+
+if (btnSkipTutorial) {
+    btnSkipTutorial.onclick = closeTutorial;
+}
+
+if (tutorialOverlay) {
+    tutorialOverlay.onclick = (e) => {
+        if (e.target === tutorialOverlay) {
+            closeTutorial();
+        }
+    };
+}
+
+// Auto-start tutorial if not completed before
+window.addEventListener("load", () => {
+    const completed = localStorage.getItem("bubbleSortTutorialCompleted");
+    if (!completed) {
+        setTimeout(startTutorial, 1000);
+    }
+});
+
