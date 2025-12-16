@@ -12,6 +12,8 @@ class LinkedList {
         this.tail = null
     }
 
+    // Các hàm xử lý
+
     addHead(value) {
         const p = new Node(value)
         if (this.head) {
@@ -152,6 +154,20 @@ class LinkedList {
     searchByValue(value) {
         let tmp = this.head
         while (tmp !== null && tmp.value !== value) tmp = tmp.next
+        return tmp
+    }
+
+    searchByIndex(index) {
+        if (index < 0) return null
+
+        let tmp = this.head
+        let count = 0
+
+        while (tmp !== null && count < index) {
+            tmp = tmp.next
+            count++
+        }
+
         return tmp
     }
 

@@ -3,78 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <title>BST Visualizer</title>
-=======
-    <title>BST Visualizer - Giao Diện Hiện Đại</title>
->>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
+    <title>BST Visualization</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- D3.js -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="home.css">
 </head>
 <body>
     <div class="app-container">
         <!-- App Header -->
-        <div class="app-header">
+        <div class="app-header" id="appHeader">
             <div class="app-title">
-                <span>🌳</span> Binary Search Tree Visualizer
+                <span>🌳</span> Binary Search Tree Visualization
             </div>
             <div class="header-controls">
                 <button class="btn btn-light btn-sm" onclick="toggleControls()">
-                    <span id="toggleIcon">▼</span> 
-                    <span id="toggleText">Thu Nhỏ Controls</span>
+                    <span id="toggleIcon">▲</span>
                 </button>
             </div>
+        </div>
+        
+        <!-- Show Controls Button (visible when collapsed) -->
+        <div class="show-controls-container" id="showControlsContainer">
+            <button class="btn btn-show-controls" onclick="toggleControls()">
+                <span>▼</span>
+            </button>
         </div>
         
         <!-- Control Bar -->
         <div class="control-bar" id="controlBar">
             <div class="control-content">
-                <div class="control-group">
-                    <h6>Tạo Cây</h6>
-                    <input type="number" id="nodeCount" class="form-control" placeholder="Số node" min="1" max="100" style="width: 100px;">
-                    <textarea id="nodeValues" class="form-control" placeholder="Nhập giá trị (cách nhau dấu phẩy)" rows="1" style="width: 220px;"></textarea>
-                    <button class="btn btn-primary" onclick="createTreeFromInput()">
-                        <span>🌳</span> Tạo Cây
-                    </button>
-                    <button class="btn btn-success" onclick="createRandomTree()">
-                        <span>🎲</span> Cây Ngẫu Nhiên
-                    </button>
+                <!-- Hàng 1: Khởi tạo + Khác + Node + Bound + Min/Max -->
+                <div class="control-row">
+                    <!-- Khởi tạo cây -->
+                    <div class="ctrl-section">
+                        <span class="section-label">🌳 Khởi Tạo Cây</span>
+                        <div class="section-controls">
+                            <input type="number" id="nodeCount" class="form-control form-control-sm" placeholder="Số node" min="1" max="20">
+                            <select id="treeType" class="form-select form-select-sm">
+                                <option value="balanced" selected>Cân bằng</option>
+                                <option value="perfect">Hoàn hảo</option>
+                                <option value="minavl">MinAVL</option>
+                                <option value="unbalanced">Không cân bằng</option>
+                                <option value="right-skewed">Lệch phải</option>
+                                <option value="left-skewed">Lệch trái</option>
+                            </select>
+                            <button class="btn btn-success btn-sm" onclick="createRandomTree()">🎲 Tạo Ngẫu Nhiên</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section-divider"></div>
+                    
+                    <!-- Cân bằng & Xóa -->
+                    <div class="ctrl-section">
+                        <span class="section-label">⚙️ Khác</span>
+                        <div class="section-controls">
+                            <button class="btn btn-primary btn-sm" onclick="balanceTree()">⚖️ Cân Bằng</button>
+                            <button class="btn btn-warning btn-sm" onclick="resetTree()">🔄 Reset</button>
+                            <button class="btn btn-danger btn-sm" onclick="clearTree()">🗑️ Xóa Cây</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section-divider"></div>
+                    
+                    <!-- Thao tác Node -->
+                    <div class="ctrl-section">
+                        <span class="section-label">📝 Node</span>
+                        <div class="section-controls">
+                            <input type="number" id="nodeValue" class="form-control form-control-sm" placeholder="Giá trị" min="-9999" max="9999">
+                            <button class="btn btn-primary btn-sm" onclick="insertNode()">➕ Thêm</button>
+                            <button class="btn btn-warning btn-sm" onclick="findNode()">🔍 Tìm</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteSelectedNode()">❌ Xóa</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section-divider"></div>
+                    
+                    <!-- Bound -->
+                    <div class="ctrl-section">
+                        <span class="section-label">🎯 Bound</span>
+                        <div class="section-controls">
+                            <input type="number" id="boundValue" class="form-control form-control-sm" placeholder="Giá trị" min="-9999" max="9999">
+                            <button class="btn btn-info btn-sm" onclick="findLowerBound()">⬇️ Lower</button>
+                            <button class="btn btn-info btn-sm" onclick="findUpperBound()">⬆️ Upper</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section-divider"></div>
+                    
+                    <!-- Min/Max -->
+                    <div class="ctrl-section">
+                        <span class="section-label">📊 Min/Max</span>
+                        <div class="section-controls">
+                            <button class="btn btn-success btn-sm" onclick="findMin()">⬇️ Min</button>
+                            <button class="btn btn-success btn-sm" onclick="findMax()">⬆️ Max</button>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="control-group">
-                    <h6>Thao Tác Node</h6>
-                    <input type="number" id="nodeValue" class="form-control" placeholder="Giá trị node" min="-9999" max="9999" style="width: 130px;">
-                    <button class="btn btn-primary" onclick="insertNode()">
-                        <span>➕</span> Thêm Node
-                    </button>
-                    <button class="btn btn-warning" onclick="findNode()">
-                        <span>🔍</span> Tìm Kiếm
-                    </button>
-                    <button class="btn btn-danger" onclick="deleteSelectedNode()">
-                        <span>❌</span> Xóa Node
-                    </button>
-                </div>
-                
-                <div class="control-group">
-                    <h6>Hành Động Khác</h6>
-                    <button class="btn btn-danger" onclick="clearTree()">
-                        <span>🗑️</span> Xóa Cây
-                    </button>
-                    <button class="btn btn-primary" onclick="balanceTree()">
-                        <span>⚖️</span> Cân Bằng
-                    </button>
-                    <button class="btn btn-info" onclick="traverseTree('inorder')">
-                        <span>🔄</span> Duyệt In-order
-                    </button>
-<<<<<<< HEAD
-                    <button class="btn btn-success toggle-lod-btn" onclick="toggleLOD()">
-                        <span>🔍</span> Thu Nhỏ
-                    </button>
-=======
->>>>>>> c4c559dab60bd1e8361a7c9cfa9bcf396007b454
+                <!-- Hàng 2: Nhập giá trị + Duyệt -->
+                <div class="control-row">
+                    <!-- Nhập giá trị cụ thể -->
+                    <div class="ctrl-section flex-grow">
+                        <span class="section-label">✍️ Nhập Giá Trị</span>
+                        <div class="section-controls">
+                            <input type="text" id="nodeValues" class="form-control form-control-sm" placeholder="Nhập nhiều giá trị cách nhau bởi dấu phẩy (vd: 10,20,30,40,50)">
+                            <button class="btn btn-primary btn-sm" onclick="createTreeFromInput()">Tạo Cây</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section-divider"></div>
+                    
+                    <!-- Duyệt -->
+                    <div class="ctrl-section">
+                        <span class="section-label">🔄 Duyệt Cây</span>
+                        <div class="section-controls">
+                            <button class="btn btn-outline-secondary btn-sm" onclick="traverseTree('preorder')">Pre-order</button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="traverseTree('inorder')">In-order</button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="traverseTree('postorder')">Post-order</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,40 +136,30 @@
             <div class="graph-container" id="graphContainer">
                 <svg id="treeSVG"></svg>
                 
-                <!-- Zoom Controls -->
-                <div class="zoom-controls">
-                    <button class="zoom-btn" onclick="zoomIn()">+</button>
-                    <button class="zoom-btn" onclick="zoomOut()">-</button>
-                    <button class="zoom-btn" onclick="resetZoom()">↺</button>
+                <!-- Result Panel -->
+                <div class="result-panel collapsed" id="resultPanel">
+                    <button class="close-result-btn" onclick="toggleResultPanel()">×</button>
+                    <div class="result-content" id="resultContent">Kết quả sẽ hiển thị ở đây</div>
                 </div>
+                <button class="toggle-result-btn" id="toggleResultBtn" onclick="toggleResultPanel()">
+                    📄
+                </button>
+                
+                <!-- Algorithm Panel -->
+                <div class="algorithm-panel collapsed" id="algorithmPanel">
+                    <button class="close-algorithm-btn" onclick="toggleAlgorithmPanel()">×</button>
+                    <pre class="algorithm-code" id="algorithmCode">Chọn một thao tác để xem thuật toán</pre>
+                </div>
+                <button class="toggle-algorithm-btn" id="toggleAlgorithmBtn" onclick="toggleAlgorithmPanel()">
+                    📝
+                </button>
                 
                 <!-- Legend -->
-                <div class="legend">
-                    <div class="legend-title">
-                        <span>📋</span> Chú Thích
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: #4cc9f0;"></div>
-                        <span>Nhánh Trái</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: #4361ee;"></div>
-                        <span>Nhánh Phải</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: #f72585;"></div>
-                        <span>Node Được Chọn</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: #f8961e;"></div>
-                        <span>Node Đã Duyệt</span>
-                    </div>
-                </div>
-                
                 <!-- Stats -->
-                <div class="stats-panel">
+                <div class="stats-panel collapsed" id="statsPanel">
                     <div class="stats-title">
-                        <span>📊</span> Thống Kê Cây
+                        <span>📊 Thống Kê Cây</span>
+                        <button class="close-stats-btn" onclick="toggleStatsPanel()">×</button>
                     </div>
                     <div class="stats-grid">
                         <div class="stat-item">
@@ -139,74 +180,42 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Toggle Info Button -->
-        <button class="toggle-info-btn" id="toggleInfoBtn" onclick="toggleInfoPanel()">
-            <span>▲</span> Thuật Toán
-        </button>
-        
-        <!-- Info Panel -->
-        <div class="info-panel collapsed" id="infoPanel">
-            <div class="info-panel-header">
-                <h3>Thuật Toán Binary Search Tree</h3>
-                <button class="toggle-info-btn" onclick="toggleInfoPanel()">
-                    <span>▼</span> Ẩn
+                <button class="toggle-stats-btn" id="toggleStatsBtn" onclick="toggleStatsPanel()">
+                    📊
                 </button>
             </div>
-            <div class="info-panel-content" id="algorithmSteps">
-                <div class="algorithm-step">
-                    <div class="step-title">1. Khởi tạo cây BST</div>
-                    <div class="step-description">
-                        - Tạo một cây rỗng với root = null<br>
-                        - Mỗi node có giá trị, con trỏ left và right
-                    </div>
-                </div>
-                <div class="algorithm-step">
-                    <div class="step-title">2. Thêm node mới</div>
-                    <div class="step-description">
-                        - So sánh giá trị mới với node hiện tại<br>
-                        - Nếu nhỏ hơn: đi sang nhánh trái<br>
-                        - Nếu lớn hơn: đi sang nhánh phải<br>
-                        - Khi gặp vị trí null, chèn node mới
-                    </div>
-                </div>
-                <div class="algorithm-step">
-                    <div class="step-title">3. Tìm kiếm node</div>
-                    <div class="step-description">
-                        - So sánh giá trị cần tìm với node hiện tại<br>
-                        - Nếu bằng: trả về node<br>
-                        - Nếu nhỏ hơn: tìm trong nhánh trái<br>
-                        - Nếu lớn hơn: tìm trong nhánh phải<br>
-                        - Nếu không tìm thấy: trả về null
-                    </div>
-                </div>
-                <div class="algorithm-step">
-                    <div class="step-title">4. Xóa node</div>
-                    <div class="step-description">
-                        - Tìm node cần xóa<br>
-                        - Trường hợp 1: Node lá - xóa trực tiếp<br>
-                        - Trường hợp 2: Node có 1 con - thay thế bằng con<br>
-                        - Trường hợp 3: Node có 2 con - tìm node nhỏ nhất trong nhánh phải để thay thế
-                    </div>
-                </div>
-                <div class="algorithm-step">
-                    <div class="step-title">5. Duyệt cây</div>
-                    <div class="step-description">
-                        - In-order: Trái -> Gốc -> Phải (cho kết quả tăng dần)<br>
-                        - Pre-order: Gốc -> Trái -> Phải<br>
-                        - Post-order: Trái -> Phải -> Gốc
-                    </div>
-                </div>
-                <div class="algorithm-step">
-                    <div class="step-title">6. Cân bằng cây</div>
-                    <div class="step-description">
-                        - Thu thập tất cả node theo thứ tự in-order<br>
-                        - Xây dựng lại cây từ mảng đã sắp xếp<br>
-                        - Chọn phần tử giữa làm root, đệ quy cho nửa trái và phải
-                    </div>
-                </div>
+        </div>
+    </div>
+
+    <!-- Animation Control Bar -->
+    <div class="animation-control-bar" id="animationControlBar">
+        <div class="control-bar-content">
+            <button class="control-btn" id="prevStepBtn" onclick="prevStep()" title="Bước trước">
+                <span>⏪</span>
+            </button>
+            <button class="control-btn" id="playPauseBtn" onclick="togglePlayPause()" title="Tạm dừng/Tiếp tục">
+                <span id="playPauseIcon">⏸️</span>
+            </button>
+            <button class="control-btn" id="nextStepBtn" onclick="nextStep()" title="Bước tiếp">
+                <span>⏩</span>
+            </button>
+            
+            <div class="timeline-container">
+                <span class="step-indicator" id="stepIndicator">0/0</span>
+                <input type="range" class="timeline-slider" id="timelineSlider" min="0" max="0" value="0" disabled>
+                <span class="time-display" id="timeDisplay">0:00</span>
+            </div>
+            
+            <div class="speed-control">
+                <label for="speedSelect">⚡</label>
+                <select class="speed-select" id="speedSelect" onchange="changeSpeed()">
+                    <option value="600">0.5x</option>
+                    <option value="400" selected>1x</option>
+                    <option value="200">2x</option>
+                    <option value="133">3x</option>
+                    <option value="100">4x</option>
+                    <option value="80">5x</option>
+                </select>
             </div>
         </div>
     </div>

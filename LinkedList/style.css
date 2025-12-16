@@ -45,6 +45,121 @@ button:hover {
     box-shadow: 0 10px 25px rgba(59, 37, 139, 0.22);
 }
 
+/* Tutorial Modal */
+.tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.tutorial-overlay.active {
+    display: flex;
+}
+
+.tutorial-modal {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease;
+}
+
+.tutorial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.tutorial-title {
+    margin: 0;
+    color: #4361ee;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.tutorial-progress {
+    background: #e9ecef;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #495057;
+}
+
+.tutorial-content {
+    margin: 25px 0;
+    color: #495057;
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+.tutorial-content h4 {
+    color: #4361ee;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.tutorial-content ul {
+    padding-left: 25px;
+}
+
+.tutorial-content li {
+    margin-bottom: 8px;
+}
+
+.tutorial-content code {
+    background: #f8f9fa;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #d63384;
+    font-family: 'Courier New', monospace;
+}
+
+.tutorial-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px solid #e9ecef;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 .display-area {
     z-index: 10;
     display: flex;
