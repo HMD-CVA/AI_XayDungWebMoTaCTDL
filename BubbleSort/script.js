@@ -400,46 +400,11 @@ const tutorialSteps = [
         `
     },
     {
-        title: "Trực quan hóa",
-        content: `
-            <p>Trong trình trực quan hóa này:</p>
-            <ul>
-                <li><strong>Cột (Bars)</strong> đại diện cho các số trong mảng.</li>
-                <li><strong>Chiều cao</strong> tương ứng với giá trị (cao hơn = lớn hơn).</li>
-                <li><span style="color: #ff9a9e; font-weight: bold;">Hồng/Đỏ</span> nghĩa là các phần tử đang được <strong>so sánh</strong>.</li>
-                <li><span style="color: #a18cd1; font-weight: bold;">Tím</span> nghĩa là các phần tử đang được <strong>hoán đổi</strong>.</li>
-                <li><span style="color: #43e97b; font-weight: bold;">Xanh lá</span> nghĩa là phần tử đã được <strong>sắp xếp</strong>.</li>
-            </ul>
-        `
-    },
-    {
-        title: "Điều khiển & Tính năng",
-        content: `
-            <p>Khám phá thanh công cụ để điều khiển quá trình mô phỏng:</p>
-            <ul>
-                <li><strong>Random Array</strong>: Tạo mới một tập hợp các cột ngẫu nhiên.</li>
-                <li><strong>Custom Input</strong>: Nhập các số cụ thể của bạn để sắp xếp.</li>
-                <li><strong>Start Sort</strong>: Bắt đầu chạy mô phỏng.</li>
-                <li><strong>Speed Slider</strong>: Điều chỉnh tốc độ sắp xếp nhanh hay chậm.</li>
-                <li><strong>Reset</strong>: Dừng và đặt lại mảng.</li>
-            </ul>
-        `
-    },
-    {
-        title: "Sidebar Mã giả",
-        content: `
-            <p>Ở bên phải (hoặc nhấn click vào mũi tên <i class="bi bi-chevron-left"></i>), bạn sẽ thấy <strong>Mã giả (Pseudocode)</strong>.</p>
-            <p>Khi mô phỏng chạy, dòng mã hiện tại đang được thực thi sẽ được <span style="background-color: #f1c40f; padding: 2px 4px; border-radius: 4px;">highlight</span>.</p>
-            <p>Điều này giúp bạn kết nối hành động trực quan với logic thuật toán!</p>
-        `
-    },
-    {
         title: "Hãy cùng thử thực hiện nhé",
         content: `
-            <p>Bạn đã sẵn sàng! <i class="bi bi-rocket-takeoff text-success"></i></p>
-            <p>Hãy thử tạo mảng ngẫu nhiên hoặc nhập trường hợp khó (như danh sách giảm dần) và xem Bubble Sort xử lý.</p>
-            <p>Nhấn <strong>Start Sort</strong> bất cứ khi nào bạn sẵn sàng.</p>
-            <p><em>Bạn luôn có thể mở lại hướng dẫn này bằng cách nhấn nút <strong>Tutorial</strong>.</em></p>
+            <p>Bạn đã nắm được lý thuyết cơ bản! <i class="bi bi-check-circle-fill text-success"></i></p>
+            <p>Bây giờ, hãy cùng khám phá chi tiết các chức năng trên giao diện (như tạo mảng, chỉnh tốc độ, mã giả...) qua <strong>Tour hướng dẫn tương tác</strong>.</p>
+            <p>Nhấn <strong>Finish</strong> để bắt đầu Tour ngay nhé!</p>
         `
     }
 ];
@@ -478,7 +443,7 @@ function showTutorial(step) {
 
 function closeTutorial() {
     tutorialOverlay.classList.remove("active");
-    localStorage.setItem("bubbleSortTutorialCompleted", "true");
+    // Not setting flag here anymore, let user choose when to use tour
 }
 
 function startTutorial() {
@@ -486,23 +451,28 @@ function startTutorial() {
     showTutorial(0);
 }
 
-// Event Listeners for Tutorial
+// Event Listeners for Tutorial Button
 if (btnTutorial) {
     btnTutorial.onclick = startTutorial;
 }
 
+// Navigation Buttons for Modal
 if (btnNextTutorial) {
-    btnNextTutorial.onclick = () => showTutorial(currentTutorialStep + 1);
+    btnNextTutorial.onclick = () => {
+        if (currentTutorialStep < tutorialSteps.length - 1) {
+            showTutorial(currentTutorialStep + 1);
+        } else {
+            closeTutorial();
+            setTimeout(startTour, 300); // Start Tour after Tutorial finishes
+        }
+    };
 }
-
 if (btnPreviousTutorial) {
     btnPreviousTutorial.onclick = () => showTutorial(currentTutorialStep - 1);
 }
-
 if (btnSkipTutorial) {
     btnSkipTutorial.onclick = closeTutorial;
 }
-
 if (tutorialOverlay) {
     tutorialOverlay.onclick = (e) => {
         if (e.target === tutorialOverlay) {
@@ -511,10 +481,215 @@ if (tutorialOverlay) {
     };
 }
 
-// Auto-start tutorial if not completed before
+
+// --- Tour Guide Logic ---
+
+const tourSteps = [
+    {
+        title: "Chào mừng đến với Bubble Sort!",
+        content: "Công cụ này giúp bạn trực quan hóa thuật toán sắp xếp nổi bọt (Bubble Sort). Bong bóng lớn sẽ nổi lên trên cùng qua từng vòng lặp. Hãy cùng đi một vòng các chức năng nhé!",
+        target: "center",
+        position: "center"
+    },
+    {
+        title: "Tạo Mảng Dữ Liệu",
+        content: `
+            <ul>
+                <li><strong><i class="bi bi-shuffle"></i> Random Array:</strong> Tạo mảng ngẫu nhiên mới. Bạn có thể chọn kích thước (Size) ở cửa sổ hiện ra.</li>
+                <li><strong><i class="bi bi-keyboard"></i> Custom Input:</strong> Tự nhập các số của bạn (cách nhau bởi dấu phẩy) để kiểm thử các trường hợp cụ thể.</li>
+            </ul>
+        `,
+        target: ".function-card > div > div:first-child",
+        position: "bottom"
+    },
+    {
+        title: "Điều Khiển Tốc Độ",
+        content: "Kéo thanh trượt để điều chỉnh tốc độ mô phỏng. Kéo sang trái để chậm lại (dễ quan sát), kéo sang phải để tăng tốc.",
+        target: ".function-card .ms-auto",
+        position: "bottom"
+    },
+    {
+        title: "Khu Vực Hiển Thị",
+        content: `
+            <p>Đây là nơi các cột (Bars) được vẽ:</p>
+            <ul>
+                <li>Chiều cao cột thể hiện giá trị số.</li>
+                <li><span style="color: #ff9a9e; font-weight: bold;">Đỏ/Hồng:</span> Đang so sánh.</li>
+                <li><span style="color: #a18cd1; font-weight: bold;">Tím:</span> Đang hoán đổi.</li>
+                <li><span style="color: #43e97b; font-weight: bold;">Xanh lá:</span> Đã sắp xếp đúng vị trí.</li>
+            </ul>
+        `,
+        target: "#display-container",
+        position: "top" // Hiển thị bên dưới vì container lớn
+    },
+    {
+        title: "Khu Vực Mã Giả (Pseudocode)",
+        content: "Mã giả của thuật toán Bubble Sort. Khi chạy, dòng code đang thực thi sẽ được highlight màu vàng giúp bạn theo dõi logic.",
+        target: "#toggle-sidebar",
+        position: "left"
+    },
+    {
+        title: "Bắt Đầu Sắp Xếp",
+        content: "Nhấn nút <strong><i class='bi bi-play-circle'></i> Start Sort</strong> để bắt đầu quá trình sắp xếp. Nút <strong>Reset</strong> để quay lại trạng thái ban đầu.",
+        target: "#btn-start",
+        position: "bottom"
+    }
+];
+
+let currentTourStep = 0;
+const tourOverlay = document.getElementById("tourOverlay");
+const tourSpotlight = document.getElementById("tourSpotlight");
+const tourPopup = document.getElementById("tourPopup");
+const tourTitle = document.getElementById("tourTitle");
+const tourContent = document.getElementById("tourContent");
+const tourStep = document.getElementById("tourStep");
+const tourPrev = document.getElementById("tourPrev");
+const tourNext = document.getElementById("tourNext");
+const tourSkip = document.getElementById("tourSkip");
+
+function startTour() {
+    currentTourStep = 0;
+    tourOverlay.style.display = "block";
+
+    // Ensure popup is visible (reset opacity if needed)
+    tourPopup.style.opacity = "0";
+
+    setTimeout(() => {
+        showTourStep(0);
+        tourPopup.style.opacity = "1";
+    }, 100);
+}
+
+function endTour() {
+    tourOverlay.style.display = "none";
+    localStorage.setItem("bubbleSort_V2_Completed", "true");
+}
+
+function showTourStep(index) {
+    if (index < 0 || index >= tourSteps.length) return;
+
+    currentTourStep = index;
+    const step = tourSteps[index];
+
+    // Update Content
+    tourTitle.textContent = step.title;
+    tourContent.innerHTML = step.content;
+    tourStep.textContent = `${index + 1}/${tourSteps.length}`;
+
+    // Update Buttons
+    tourPrev.disabled = index === 0;
+    tourNext.textContent = index === tourSteps.length - 1 ? "Hoàn thành" : "Tiếp";
+
+    // Position Spotlight & Popup
+    if (step.target === "center") {
+        // Hide Spotlight
+        tourSpotlight.style.width = "0";
+        tourSpotlight.style.height = "0";
+        tourSpotlight.style.top = "50%";
+        tourSpotlight.style.left = "50%";
+        tourSpotlight.style.boxShadow = "none"; // Remove spotlight effect for welcome screen, or keep full overlay
+        tourSpotlight.style.boxShadow = "0 0 0 9999px rgba(0, 0, 0, 0.7)"; // Full dark overlay
+
+        // Center Popup
+        tourPopup.style.top = "50%";
+        tourPopup.style.left = "50%";
+        tourPopup.style.transform = "translate(-50%, -50%)";
+    } else {
+        const targetEl = document.querySelector(step.target);
+        if (targetEl) {
+            const rect = targetEl.getBoundingClientRect();
+
+            // Set Spotlight
+            tourSpotlight.style.width = `${rect.width + 10}px`;
+            tourSpotlight.style.height = `${rect.height + 10}px`;
+            tourSpotlight.style.top = `${rect.top - 5}px`;
+            tourSpotlight.style.left = `${rect.left - 5}px`;
+            // Restore spotlight shadow
+            tourSpotlight.style.boxShadow = "0 0 0 9999px rgba(0, 0, 0, 0.7), 0 0 30px rgba(67, 97, 238, 0.8)";
+
+            // Position Popup
+            positionPopup(rect, step.position);
+        } else {
+            // Fallback if target not found
+            console.warn("Tour target not found:", step.target);
+            tourSpotlight.style.opacity = "0";
+            tourPopup.style.top = "50%";
+            tourPopup.style.left = "50%";
+            tourPopup.style.transform = "translate(-50%, -50%)";
+        }
+    }
+}
+
+function positionPopup(targetRect, position) {
+    // Reset transform used for centering
+    tourPopup.style.transform = "none";
+
+    const popupRect = tourPopup.getBoundingClientRect();
+    // Default dimensions
+    const popupWidth = 350;
+    const popupHeight = tourPopup.offsetHeight || 200;
+
+    const margin = 20;
+    let top, left;
+
+    // Simple positioning logic
+    if (position === "bottom") {
+        top = targetRect.bottom + margin;
+        left = targetRect.left + (targetRect.width / 2) - (350 / 2); // Center horizontally
+    } else if (position === "top") {
+        top = targetRect.top - popupHeight - margin;
+        left = targetRect.left + (targetRect.width / 2) - (350 / 2);
+    } else if (position === "left") {
+        top = targetRect.top + (targetRect.height / 2) - (popupHeight / 2);
+        left = targetRect.left - 350 - margin;
+    } else if (position === "right") {
+        top = targetRect.top + (targetRect.height / 2) - (popupHeight / 2);
+        left = targetRect.right + margin;
+    }
+
+    // Boundary checks (basic)
+    if (left < 10) left = 10;
+    if (left + 350 > window.innerWidth - 10) left = window.innerWidth - 350 - 10;
+    if (top < 10) top = 10;
+    if (top + popupHeight > window.innerHeight - 10) top = window.innerHeight - popupHeight - 10;
+
+    tourPopup.style.top = `${top}px`;
+    tourPopup.style.left = `${left}px`;
+}
+
+// Event Listeners for Tour
+
+
+if (tourNext) {
+    tourNext.onclick = () => {
+        if (currentTourStep < tourSteps.length - 1) {
+            showTourStep(currentTourStep + 1);
+        } else {
+            endTour();
+        }
+    };
+}
+
+if (tourPrev) {
+    tourPrev.onclick = () => {
+        if (currentTourStep > 0) {
+            showTourStep(currentTourStep - 1);
+        }
+    };
+}
+
+if (tourSkip) {
+    tourSkip.onclick = endTour;
+}
+
+// Auto-start (optional logic)
 window.addEventListener("load", () => {
-    const completed = localStorage.getItem("bubbleSortTutorialCompleted");
-    if (!completed) {
+    // Override previous tutorial check
+    // If you want to force show it once for testing, uncomment line below
+    // localStorage.removeItem("bubbleSortTourCompleted"); 
+
+    // Check old key or new key
+    if (!localStorage.getItem("bubbleSort_V2_Completed")) {
         setTimeout(startTutorial, 1000);
     }
 });

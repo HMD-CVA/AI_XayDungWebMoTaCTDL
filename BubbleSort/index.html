@@ -23,8 +23,9 @@
                 <div class="card-body function-card">
                     <div class="d-flex flex-wrap align-items-center gap-2">
                         <div class="d-flex flex-wrap align-items-center gap-2 flex-grow-1">
-                            <button id="btn-tutorial" class="btn btn-primary"><i class="bi bi-question-circle"></i>
-                                Tutorial</button>
+                            <button id="btn-tutorial" class="btn btn-outline-primary"><i
+                                    class="bi bi-question-circle"></i>
+                                Hướng dẫn</button>
                             <button id="btn-create-random" class="btn btn-warning"><i class="bi bi-shuffle"></i> Random
                                 Array</button>
                             <button id="btn-custom-input" class="btn btn-info"><i class="bi bi-keyboard"></i> Custom
@@ -124,6 +125,25 @@
                     <button class="btn btn-secondary" id="btn-skip-tutorial">Skip All</button>
                     <button class="btn btn-primary" id="btn-next-tutorial">Next</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour Guide Overlay -->
+    <div id="tourOverlay" class="tour-overlay" style="display: none;">
+        <div id="tourSpotlight" class="tour-spotlight"></div>
+        <div id="tourPopup" class="tour-popup">
+            <div class="tour-header">
+                <span id="tourStep" class="tour-step">1/10</span>
+                <button id="tourSkip" class="tour-skip">Bỏ qua</button>
+            </div>
+            <div class="tour-body">
+                <h5 id="tourTitle" class="tour-title"></h5>
+                <div id="tourContent" class="tour-content"></div>
+            </div>
+            <div class="tour-footer">
+                <button id="tourPrev" class="tour-btn tour-btn-prev" disabled>Trước</button>
+                <button id="tourNext" class="tour-btn tour-btn-next">Tiếp</button>
             </div>
         </div>
     </div>
