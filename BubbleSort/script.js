@@ -400,46 +400,11 @@ const tutorialSteps = [
         `
     },
     {
-        title: "Trực quan hóa",
-        content: `
-            <p>Trong trình trực quan hóa này:</p>
-            <ul>
-                <li><strong>Cột (Bars)</strong> đại diện cho các số trong mảng.</li>
-                <li><strong>Chiều cao</strong> tương ứng với giá trị (cao hơn = lớn hơn).</li>
-                <li><span style="color: #ff9a9e; font-weight: bold;">Hồng/Đỏ</span> nghĩa là các phần tử đang được <strong>so sánh</strong>.</li>
-                <li><span style="color: #a18cd1; font-weight: bold;">Tím</span> nghĩa là các phần tử đang được <strong>hoán đổi</strong>.</li>
-                <li><span style="color: #43e97b; font-weight: bold;">Xanh lá</span> nghĩa là phần tử đã được <strong>sắp xếp</strong>.</li>
-            </ul>
-        `
-    },
-    {
-        title: "Điều khiển & Tính năng",
-        content: `
-            <p>Khám phá thanh công cụ để điều khiển quá trình mô phỏng:</p>
-            <ul>
-                <li><strong>Random Array</strong>: Tạo mới một tập hợp các cột ngẫu nhiên.</li>
-                <li><strong>Custom Input</strong>: Nhập các số cụ thể của bạn để sắp xếp.</li>
-                <li><strong>Start Sort</strong>: Bắt đầu chạy mô phỏng.</li>
-                <li><strong>Speed Slider</strong>: Điều chỉnh tốc độ sắp xếp nhanh hay chậm.</li>
-                <li><strong>Reset</strong>: Dừng và đặt lại mảng.</li>
-            </ul>
-        `
-    },
-    {
-        title: "Sidebar Mã giả",
-        content: `
-            <p>Ở bên phải (hoặc nhấn click vào mũi tên <i class="bi bi-chevron-left"></i>), bạn sẽ thấy <strong>Mã giả (Pseudocode)</strong>.</p>
-            <p>Khi mô phỏng chạy, dòng mã hiện tại đang được thực thi sẽ được <span style="background-color: #f1c40f; padding: 2px 4px; border-radius: 4px;">highlight</span>.</p>
-            <p>Điều này giúp bạn kết nối hành động trực quan với logic thuật toán!</p>
-        `
-    },
-    {
         title: "Hãy cùng thử thực hiện nhé",
         content: `
-            <p>Bạn đã sẵn sàng! <i class="bi bi-rocket-takeoff text-success"></i></p>
-            <p>Hãy thử tạo mảng ngẫu nhiên hoặc nhập trường hợp khó (như danh sách giảm dần) và xem Bubble Sort xử lý.</p>
-            <p>Nhấn <strong>Start Sort</strong> bất cứ khi nào bạn sẵn sàng.</p>
-            <p><em>Bạn luôn có thể mở lại hướng dẫn này bằng cách nhấn nút <strong>Tutorial</strong>.</em></p>
+            <p>Bạn đã nắm được lý thuyết cơ bản! <i class="bi bi-check-circle-fill text-success"></i></p>
+            <p>Bây giờ, hãy cùng khám phá chi tiết các chức năng trên giao diện (như tạo mảng, chỉnh tốc độ, mã giả...) qua <strong>Tour hướng dẫn tương tác</strong>.</p>
+            <p>Nhấn <strong>Finish</strong> để bắt đầu Tour ngay nhé!</p>
         `
     }
 ];
