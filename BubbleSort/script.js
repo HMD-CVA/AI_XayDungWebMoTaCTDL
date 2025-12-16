@@ -428,17 +428,17 @@ const tutorialSteps = [
     {
         title: "Sidebar Mã giả",
         content: `
-            <p>Ở bên phải (hoặc nh click vào mũi tên <i class="bi bi-chevron-left"></i>), bạn sẽ thấy <strong>Mã giả (Pseudocode)</strong>.</p>
+            <p>Ở bên phải (hoặc nhấn click vào mũi tên <i class="bi bi-chevron-left"></i>), bạn sẽ thấy <strong>Mã giả (Pseudocode)</strong>.</p>
             <p>Khi mô phỏng chạy, dòng mã hiện tại đang được thực thi sẽ được <span style="background-color: #f1c40f; padding: 2px 4px; border-radius: 4px;">highlight</span>.</p>
             <p>Điều này giúp bạn kết nối hành động trực quan với logic thuật toán!</p>
         `
     },
     {
-        title: "Sẵn sàng sắp xếp?",
+        title: "Hãy cùng thử thực hiện nhé",
         content: `
             <p>Bạn đã sẵn sàng! <i class="bi bi-rocket-takeoff text-success"></i></p>
             <p>Hãy thử tạo mảng ngẫu nhiên hoặc nhập trường hợp khó (như danh sách giảm dần) và xem Bubble Sort xử lý.</p>
-            <p>Nh nhấn <strong>Start Sort</strong> bất cứ khi nào bạn sẵn sàng.</p>
+            <p>Nhấn <strong>Start Sort</strong> bất cứ khi nào bạn sẵn sàng.</p>
             <p><em>Bạn luôn có thể mở lại hướng dẫn này bằng cách nhấn nút <strong>Tutorial</strong>.</em></p>
         `
     }
