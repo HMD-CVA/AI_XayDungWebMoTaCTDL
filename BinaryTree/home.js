@@ -4568,5 +4568,466 @@ document.getElementById('timelineSlider').addEventListener('input', function(e) 
     jumpToStep(step);
 });
 
+// Hiển thị modal hướng dẫn khi vào trang
+window.addEventListener('load', function() {
+    // Luôn hiển thị modal và tour mỗi lần load trang
+    setTimeout(() => {
+        const guideModal = new bootstrap.Modal(document.getElementById('guideModal'));
+        guideModal.show();
+        
+        // Bắt đầu tour sau khi đóng modal
+        const modalElement = document.getElementById('guideModal');
+        modalElement.addEventListener('hidden.bs.modal', function startTourOnce() {
+            setTimeout(() => startTour(), 500);
+            modalElement.removeEventListener('hidden.bs.modal', startTourOnce);
+        });
+    }, 500);
+});
+
+// Hàm mở lại modal hướng dẫn
+function openGuideModal() {
+    // Hiện nút "Bắt Đầu Tour" khi mở lại modal
+    document.getElementById('startTourBtn').style.display = 'inline-block';
+    
+    const guideModal = new bootstrap.Modal(document.getElementById('guideModal'));
+    guideModal.show();
+}
+
+// Hàm bắt đầu tour từ trong modal
+function startTourFromModal() {
+    // Đóng modal trước
+    const modalElement = document.getElementById('guideModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    if (modalInstance) {
+        modalInstance.hide();
+    }
+    
+    // Đợi modal đóng xong rồi bắt đầu tour
+    setTimeout(() => startTour(), 500);
+}
+
+// ==================== INTERACTIVE TOUR GUIDE ====================
+
+const tourSteps = [
+    {
+        target: '.control-row:first-child .ctrl-section:nth-child(1)',
+        title: 'Bước 1: Khởi Tạo Cây',
+        content: `<p><strong>Nhóm chức năng tạo cây BST ban đầu:</strong></p>
+        <ul>
+            <li><strong>Input "Số node":</strong> Nhập số lượng node muốn tạo (1-20). Số ít để dễ quan sát, số nhiều để thấy cấu trúc phức tạp</li>
+            <li><strong>Select "Kiểu cây":</strong>
+                <ul>
+                    <li><em>Cân bằng:</em> Chiều cao tối ưu O(log n)</li>
+                    <li><em>Hoàn hảo:</em> Đầy đủ tất cả mức</li>
+                    <li><em>MinAVL:</em> Cây AVL tối thiểu</li>
+                    <li><em>Không cân bằng:</em> Ngẫu nhiên</li>
+                    <li><em>Lệch trái/phải:</em> Trường hợp xấu O(n)</li>
+                </ul>
+            </li>
+            <li><strong>Nút "Tạo Ngẫu Nhiên":</strong> Sinh cây với các giá trị ngẫu nhiên theo cấu hình đã chọn</li>
+        </ul>`,
+        position: 'bottom'
+    },
+    {
+        target: '.control-row:first-child .ctrl-section:nth-child(3)',
+        title: 'Bước 2: Thao Tác Khác',
+        content: `<p><strong>Nhóm chức năng quản lý cây:</strong></p>
+        <ul>
+            <li><strong>Cân Bằng:</strong> Tự động cân bằng cây bằng các phép xoay AVL (Left, Right, Left-Right, Right-Left). Biến cây lệch thành cây cân bằng</li>
+            <li><strong>Reset:</strong> Khôi phục lại cây về trạng thái ban đầu (sau khi tạo), hủy tất cả các thao tác đã làm</li>
+            <li><strong>Xóa Cây:</strong> Xóa toàn bộ cây và bắt đầu lại từ đầu. Canvas sẽ trống để tạo cây mới</li>
+        </ul>`,
+        position: 'bottom'
+    },
+    {
+        target: '.control-row:first-child .ctrl-section:nth-child(5)',
+        title: 'Bước 3: Thao Tác Node',
+        content: `<p><strong>Nhóm chức năng thao tác với từng node:</strong></p>
+        <ul>
+            <li><strong>Input "Giá trị":</strong> Nhập giá trị số nguyên (-9999 đến 9999) để thực hiện thao tác</li>
+            <li><strong>Thêm:</strong> Chèn node mới vào cây. Thuật toán tìm vị trí theo quy tắc BST (nhỏ hơn đi trái, lớn hơn đi phải). Node mới luôn ở vị trí lá</li>
+            <li><strong>Tìm:</strong> Tìm kiếm node có giá trị đã nhập. Duyệt từ gốc theo quy tắc BST với độ phức tạp O(log n) - O(n)</li>
+            <li><strong>Xóa:</strong> Xóa node có giá trị đã nhập. Có 3 trường hợp:
+                <ul>
+                    <li>Node lá: Xóa trực tiếp</li>
+                    <li>Node 1 con: Con thay thế vị trí</li>
+                    <li>Node 2 con: Tìm successor (node trái nhất của cây phải) để thay thế</li>
+                </ul>
+            </li>
+        </ul>`,
+        position: 'bottom'
+    },
+    {
+        target: '.control-row:first-child .ctrl-section:nth-child(7)',
+        title: 'Bước 4: Lower & Upper Bound',
+        content: `<p><strong>Nhóm chức năng tìm kiếm theo khoảng:</strong></p>
+        <ul>
+            <li><strong>Input "Giá trị":</strong> Nhập giá trị x để tìm bound</li>
+            <li><strong>Lower Bound:</strong> Tìm giá trị nhỏ nhất trong cây mà ≥ x. Ví dụ: Cây [3,5,7,9], Lower(6) = 7</li>
+            <li><strong>Upper Bound:</strong> Tìm giá trị nhỏ nhất trong cây mà > x (nghiêm ngặt). Ví dụ: Cây [3,5,7,9], Upper(5) = 7</li>
+        </ul>
+        <p><em>Hữu ích trong: Truy vấn khoảng, tìm kiếm khoảng</em></p>`,
+        position: 'bottom'
+    },
+    {
+        target: '.control-row:first-child .ctrl-section:nth-child(9)',
+        title: 'Bước 5: Min/Max',
+        content: `<p><strong>Nhóm chức năng tìm cực trị:</strong></p>
+        <ul>
+            <li><strong>Min:</strong> Tìm node có giá trị nhỏ nhất trong cây. Luôn là node trái nhất (đi liên tục sang trái cho đến khi không còn con trái)</li>
+            <li><strong>Max:</strong> Tìm node có giá trị lớn nhất trong cây. Luôn là node phải nhất (đi liên tục sang phải cho đến khi không còn con phải)</li>
+        </ul>
+        <p><em>Độ phức tạp: O(h) với h là chiều cao cây</em></p>`,
+        position: 'bottom'
+    },
+    {
+        target: '.control-row:nth-child(2) .ctrl-section:nth-child(1)',
+        title: 'Bước 6: Nhập Giá Trị',
+        content: `<p><strong>Nhóm chức năng tạo cây từ input thủ công:</strong></p>
+        <ul>
+            <li><strong>Input "Nhập nhiều giá trị":</strong> Nhập chuỗi các số nguyên cách nhau bởi dấu phẩy. Ví dụ: 50,30,70,20,40,60,80</li>
+            <li><strong>Nút "Tạo Cây":</strong> Xây dựng BST từ dãy số đã nhập. Các giá trị sẽ được chèn lần lượt từ trái sang phải</li>
+        </ul>
+        <p><em>Lưu ý: Thứ tự nhập ảnh hưởng đến cấu trúc cây. Thử: 1,2,3,4,5 vs 3,1,5,2,4</em></p>`,
+        position: 'bottom'
+    },
+    {
+        target: '.control-row:nth-child(2) .ctrl-section:nth-child(3)',
+        title: 'Bước 7: Duyệt Cây',
+        content: `<p><strong>Nhóm chức năng duyệt cây (Tree Traversal):</strong></p>
+        <ul>
+            <li><strong>Pre-order (NLR):</strong> Duyệt theo thứ tự: Node → Left → Right
+                <br><em>Ứng dụng: Copy cây, tạo prefix expression, DFS</em>
+            </li>
+            <li><strong>In-order (LNR):</strong> Duyệt theo thứ tự: Left → Node → Right
+                <br><em>Ứng dụng: Lấy dãy tăng dần, kiểm tra BST hợp lệ</em>
+            </li>
+            <li><strong>Post-order (LRN):</strong> Duyệt theo thứ tự: Left → Right → Node
+                <br><em>Ứng dụng: Xóa cây, tính biểu thức postfix</em>
+            </li>
+        </ul>
+        <p><em>Độ phức tạp: O(n) với n là số node</em></p>`,
+        position: 'bottom'
+    },
+    {
+        target: '#graphContainer',
+        title: 'Bước 8: Hiển Thị Cây',
+        content: `<p><strong>Khu vực vẽ cây BST:</strong></p>
+        <ul>
+            <li><strong>Node:</strong> Vòng tròn chứa giá trị.</li>
+            <li><strong>Cạnh:</strong> Đường nối cha-con. Cạnh trái = giá trị nhỏ hơn, cạnh phải = giá trị lớn hơn</li>
+            <li><strong>Tương tác:</strong>
+                <ul>
+                    <li>Scroll: Zoom in/out để xem rõ hơn</li>
+                    <li>Drag: Kéo để di chuyển</li>
+                </ul>
+            </li>
+        </ul>`,
+        position: 'bottom-left'
+    },
+    {
+        target: '#algorithmCode',
+        title: 'Bước 9: Panel Thuật Toán',
+        content: `<p><strong>Panel hiển thị mã giả của thuật toán đang chạy:</strong></p>
+        <ul>
+            <li><strong>Mã giả:</strong> Code mô phỏng logic thuật toán BST bằng ngôn ngữ dễ hiểu</li>
+            <li><strong>Highlight:</strong> Dòng code đang thực hiện sẽ được tô sáng màu vàng</li>
+            <li><strong>Học tập:</strong> Theo dõi từng bước để hiểu cách implement các thao tác BST</li>
+        </ul>
+        <p><em>Click nút bên phải để toggle hiện/ẩn panel</em></p>`,
+        position: 'right'
+    },
+    {
+        target: '#resultContent',
+        title: 'Bước 10: Panel Kết Quả',
+        content: `<p><strong>Panel hiển thị kết quả và giải thích chi tiết:</strong></p>
+        <ul>
+            <li><strong>Kết quả:</strong> Hiển thị output của thao tác (tìm thấy/không tìm thấy, giá trị min/max, dãy duyệt...)</li>
+            <li><strong>Giải thích:</strong> Mô tả từng bước thuật toán đã thực hiện</li>
+            <li><strong>Thông tin node:</strong> Chi tiết về node được chọn (giá trị, vị trí, con trái/phải)</li>
+        </ul>
+        <p><em>Tự động hiện khi có thao tác, click × để đóng</em></p>`,
+        position: 'right'
+    },
+    {
+        target: '#statsPanel',
+        title: 'Bước 11: Panel Thống Kê',
+        content: `<p><strong>Panel hiển thị thông tin thống kê của cây:</strong></p>
+        <ul>
+            <li><strong>Tổng Nodes:</strong> Số lượng node hiện có trong cây</li>
+            <li><strong>Chiều Cao:</strong> Chiều cao của cây (số mức từ gốc đến lá xa nhất). Cây cân bằng có h ≈ log₂(n)</li>
+            <li><strong>Node Đang Chọn:</strong> Giá trị của node đang được chọn (click vào node để chọn)</li>
+            <li><strong>Trạng Thái BST:</strong> Kiểm tra cây có thỏa tính chất BST không (✓ hợp lệ, ✗ không hợp lệ)</li>
+        </ul>
+        <p><em>Click nút 📊 để toggle hiện/ẩn panel</em></p>`,
+        position: 'right'
+    },
+    {
+        target: '#animationControlBar',
+        title: 'Bước 12: Điều Khiển Animation',
+        content: `<p><strong>Thanh điều khiển animation step-by-step:</strong></p>
+        <ul>
+            <li><strong>Previous:</strong> Quay lại bước trước đó</li>
+            <li><strong>Play/Pause:</strong> Tự động phát/tạm dừng animation</li>
+            <li><strong>Next:</strong> Chuyển đến bước tiếp theo</li>
+            <li><strong>Timeline Slider:</strong> Kéo để nhảy đến bước bất kỳ (hiện số bước hiện tại/tổng số)</li>
+            <li><strong>Speed Select:</strong> Điều chỉnh tốc độ animation từ 0.5x (chậm) đến 5x (nhanh)</li>
+        </ul>
+        <p><strong>Hoàn thành tour!</strong> Bây giờ hãy thử tạo cây và khám phá các tính năng!</p>`,
+        position: 'top'
+    }
+];
+
+let currentTourStep = 0;
+let tourActive = false;
+let previousHighlightedElement = null;
+
+function startTour() {
+    currentTourStep = 0;
+    tourActive = true;
+    
+    // Mở hết tất cả các panel
+    const algorithmPanel = document.getElementById('algorithmPanel');
+    const resultPanel = document.getElementById('resultPanel');
+    const statsPanel = document.getElementById('statsPanel');
+    
+    if (algorithmPanel && algorithmPanel.classList.contains('collapsed')) {
+        toggleAlgorithmPanel();
+    }
+    if (resultPanel && resultPanel.classList.contains('collapsed')) {
+        toggleResultPanel();
+    }
+    if (statsPanel && statsPanel.classList.contains('collapsed')) {
+        toggleStatsPanel();
+    }
+    
+    document.getElementById('tourOverlay').style.display = 'block';
+    
+    // Đợi các panel mở xong rồi mới bắt đầu tour
+    setTimeout(() => {
+        showTourStep(currentTourStep);
+    }, 450);
+}
+
+function showTourStep(stepIndex) {
+    if (stepIndex < 0 || stepIndex >= tourSteps.length) return;
+    
+    const step = tourSteps[stepIndex];
+    const targetElement = document.querySelector(step.target);
+    
+    if (!targetElement) {
+        console.error('Target element not found:', step.target);
+        return;
+    }
+    
+    // Reset previous highlighted element
+    const previousElement = document.querySelector('[data-tour-active="true"]');
+    if (previousElement && previousElement !== targetElement) {
+        previousElement.removeAttribute('data-tour-active');
+    }
+    
+    // Update step counter
+    document.getElementById('tourStep').textContent = `${stepIndex + 1}/${tourSteps.length}`;
+    
+    // Update content
+    document.getElementById('tourTitle').innerHTML = step.title;
+    document.getElementById('tourContent').innerHTML = step.content;
+    
+    // Update buttons
+    document.getElementById('tourPrev').disabled = stepIndex === 0;
+    document.getElementById('tourNext').textContent = 
+        stepIndex === tourSteps.length - 1 ? 'Hoàn thành' : 'Tiếp';
+    
+    // Scroll element into view - for tall elements, scroll to top
+    const elementHeight = targetElement.offsetHeight;
+    const viewportHeight = window.innerHeight;
+    
+    if (elementHeight > viewportHeight * 0.6) {
+        // Element is tall, scroll to start
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+        // Normal element, center it
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    
+    // Wait for scroll to complete before positioning
+    setTimeout(() => {
+        targetElement.setAttribute('data-tour-active', 'true');
+        
+        // Position spotlight
+        const rect = targetElement.getBoundingClientRect();
+        const spotlight = document.getElementById('tourSpotlight');
+        const overlay = document.getElementById('tourOverlay');
+        const padding = 10;
+        
+        spotlight.style.left = rect.left - padding + 'px';
+        spotlight.style.top = rect.top - padding + 'px';
+        spotlight.style.width = rect.width + (padding * 2) + 'px';
+        spotlight.style.height = rect.height + (padding * 2) + 'px';
+        
+        // Position popup with smart placement
+        positionTourPopup(rect, step.position, targetElement);
+    }, 100);
+}
+
+function positionTourPopup(targetRect, position) {
+    const popup = document.getElementById('tourPopup');
+    popup.style.display = 'block'; // Ensure popup is visible
+    popup.style.opacity = '1';
+    
+    // Force reflow to get accurate popup dimensions
+    popup.offsetHeight;
+    
+    const popupRect = popup.getBoundingClientRect();
+    const padding = 20;
+    
+    let left, top;
+    let preferredPosition = position;
+    
+    // Try preferred position first
+    switch(preferredPosition) {
+        case 'right':
+            left = targetRect.right + padding;
+            top = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2);
+            break;
+        case 'left':
+            left = targetRect.left - popupRect.width - padding;
+            top = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2);
+            break;
+        case 'top':
+            left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
+            top = targetRect.top - popupRect.height - padding;
+            break;
+        case 'bottom':
+            left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
+            top = targetRect.bottom + padding;
+            break;
+        case 'bottom-left':
+            left = targetRect.left;
+            top = targetRect.bottom + padding;
+            break;
+        case 'bottom-right':
+            left = targetRect.right - popupRect.width;
+            top = targetRect.bottom + padding;
+            break;
+        case 'top-left':
+            left = targetRect.left;
+            top = targetRect.top - popupRect.height - padding;
+            break;
+        case 'top-right':
+            left = targetRect.right - popupRect.width;
+            top = targetRect.top - popupRect.height - padding;
+            break;
+    }
+    
+    // Check if popup goes out of viewport bottom
+    if (top + popupRect.height > window.innerHeight - padding) {
+        // Try top position instead
+        top = targetRect.top - popupRect.height - padding;
+        
+        // If still out of viewport, position at top of screen
+        if (top < padding) {
+            top = padding;
+        }
+    }
+    
+    // Check if popup goes out of viewport top
+    if (top < padding) {
+        top = padding;
+    }
+    
+    // Keep popup within viewport horizontally
+    left = Math.max(padding, Math.min(left, window.innerWidth - popupRect.width - padding));
+    
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+    popup.style.visibility = 'visible';
+}
+
+function endTour() {
+    tourActive = false;
+    document.getElementById('tourOverlay').style.display = 'none';
+    
+    // Reset highlighted element
+    const activeElement = document.querySelector('[data-tour-active="true"]');
+    if (activeElement) {
+        activeElement.removeAttribute('data-tour-active');
+    }
+    
+    // Đóng hết tất cả các panel
+    const algorithmPanel = document.getElementById('algorithmPanel');
+    const resultPanel = document.getElementById('resultPanel');
+    const statsPanel = document.getElementById('statsPanel');
+    
+    if (algorithmPanel && !algorithmPanel.classList.contains('collapsed')) {
+        toggleAlgorithmPanel();
+    }
+    if (resultPanel && !resultPanel.classList.contains('collapsed')) {
+        toggleResultPanel();
+    }
+    if (statsPanel && !statsPanel.classList.contains('collapsed')) {
+        toggleStatsPanel();
+    }
+}
+
+// Event listeners for tour controls
+document.addEventListener('DOMContentLoaded', function() {
+    const nextBtn = document.getElementById('tourNext');
+    const prevBtn = document.getElementById('tourPrev');
+    const skipBtn = document.getElementById('tourSkip');
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            console.log('Next clicked, current step:', currentTourStep);
+            if (currentTourStep < tourSteps.length - 1) {
+                currentTourStep++;
+                showTourStep(currentTourStep);
+            } else {
+                endTour();
+            }
+        });
+    }
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            console.log('Prev clicked, current step:', currentTourStep);
+            if (currentTourStep > 0) {
+                currentTourStep--;
+                showTourStep(currentTourStep);
+            }
+        });
+    }
+    
+    if (skipBtn) {
+        skipBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            console.log('Skip clicked');
+            endTour();
+        });
+    }
+});
+
+// Keyboard navigation for tour
+document.addEventListener('keydown', function(e) {
+    if (!tourActive) return;
+    
+    if (e.key === 'ArrowRight' || e.key === 'Enter') {
+        document.getElementById('tourNext').click();
+    } else if (e.key === 'ArrowLeft') {
+        document.getElementById('tourPrev').click();
+    } else if (e.key === 'Escape') {
+        endTour();
+    }
+});
+
+// Reposition popup on window resize
+window.addEventListener('resize', function() {
+    if (tourActive) {
+        showTourStep(currentTourStep);
+    }
+});
+
 // Khởi chạy
 initializeSampleTree();

@@ -20,6 +20,9 @@
                 <span>🌳</span> Binary Search Tree Visualization
             </div>
             <div class="header-controls">
+                <button class="btn btn-info btn-sm me-2" onclick="openGuideModal()" title="Hướng dẫn sử dụng">
+                    <span>❓</span> Hướng dẫn
+                </button>
                 <button class="btn btn-light btn-sm" onclick="toggleControls()">
                     <span id="toggleIcon">▲</span>
                 </button>
@@ -158,7 +161,7 @@
                 <!-- Stats -->
                 <div class="stats-panel collapsed" id="statsPanel">
                     <div class="stats-title">
-                        <span>📊 Thống Kê Cây</span>
+                        <span>📊 Thống Kê</span>
                         <button class="close-stats-btn" onclick="toggleStatsPanel()">×</button>
                     </div>
                     <div class="stats-grid">
@@ -216,6 +219,151 @@
                     <option value="100">4x</option>
                     <option value="80">5x</option>
                 </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour Guide Overlay -->
+    <div id="tourOverlay" class="tour-overlay" style="display: none;">
+        <div id="tourSpotlight" class="tour-spotlight"></div>
+        <div id="tourPopup" class="tour-popup">
+            <div class="tour-header">
+                <span id="tourStep" class="tour-step">1/10</span>
+                <button id="tourSkip" class="tour-skip">Bỏ qua</button>
+            </div>
+            <div class="tour-body">
+                <h5 id="tourTitle" class="tour-title"></h5>
+                <div id="tourContent" class="tour-content"></div>
+            </div>
+            <div class="tour-footer">
+                <button id="tourPrev" class="tour-btn tour-btn-prev" disabled>Trước</button>
+                <button id="tourNext" class="tour-btn tour-btn-next">Tiếp</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Hướng dẫn sử dụng -->
+    <div class="modal fade" id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="guideModalLabel">Binary Search Tree (Cây Tìm Kiếm Nhị Phân)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Phần 1: Lý thuyết cơ bản -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">1. Giới Thiệu Binary Search Tree (BST)</h6>
+                        <p><strong>Định nghĩa:</strong> Binary Search Tree là cây nhị phân có tính chất:</p>
+                        <ul>
+                            <li>Mỗi node có tối đa 2 con (trái và phải)</li>
+                            <li><strong>Tính chất BST:</strong> Với mỗi node X:
+                                <ul>
+                                    <li>Tất cả node ở cây con trái có giá trị < X</li>
+                                    <li>Tất cả node ở cây con phải có giá trị > X</li>
+                                </ul>
+                            </li>
+                            <li><strong>Ứng dụng:</strong> Tìm kiếm, sắp xếp, lưu trữ dữ liệu có thứ tự</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phần 2: Độ phức tạp -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">2. Độ Phức Tạp Thuật Toán</h6>
+                        <table class="complexity-table">
+                            <thead>
+                                <tr>
+                                    <th>Thao tác</th>
+                                    <th>Trường hợp tốt</th>
+                                    <th>Trường hợp xấu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tìm kiếm (Search)</td>
+                                    <td>O(log n)</td>
+                                    <td>O(n)</td>
+                                </tr>
+                                <tr>
+                                    <td>Thêm (Insert)</td>
+                                    <td>O(log n)</td>
+                                    <td>O(n)</td>
+                                </tr>
+                                <tr>
+                                    <td>Xóa (Delete)</td>
+                                    <td>O(log n)</td>
+                                    <td>O(n)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="note"><em>* Trường hợp xấu xảy ra khi cây lệch (skewed tree)</em></p>
+                    </div>
+
+                    <!-- Phần 3: Các thao tác cơ bản -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">3. Các Thao Tác Cơ Bản</h6>
+                        
+                        <p><strong>3.1. Tìm kiếm (Search)</strong></p>
+                        <ul>
+                            <li>So sánh giá trị cần tìm với node hiện tại</li>
+                            <li>Nếu nhỏ hơn → đi sang trái, lớn hơn → đi sang phải</li>
+                            <li>Lặp lại cho đến khi tìm thấy hoặc gặp null</li>
+                        </ul>
+
+                        <p><strong>3.2. Thêm node (Insert)</strong></p>
+                        <ul>
+                            <li>Tìm vị trí phù hợp theo quy tắc BST</li>
+                            <li>Node mới luôn được thêm ở vị trí lá (leaf)</li>
+                            <li>Giá trị không được trùng lặp</li>
+                        </ul>
+
+                        <p><strong>3.3. Xóa node (Delete)</strong></p>
+                        <ul>
+                            <li><strong>TH1:</strong> Node lá → Xóa trực tiếp</li>
+                            <li><strong>TH2:</strong> Node có 1 con → Con thay thế vị trí node</li>
+                            <li><strong>TH3:</strong> Node có 2 con → Tìm node lớn nhất bên trái hoặc nhỏ nhất bên phải để thay thế</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phần 4: Duyệt cây -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">4. Các Phương Pháp Duyệt Cây</h6>
+                        <ul>
+                            <li><strong>Pre-order (NLR):</strong> Gốc → Trái → Phải
+                                <br><em>Ứng dụng: Copy cây, tạo prefix expression</em>
+                            </li>
+                            <li><strong>In-order (LNR):</strong> Trái → Gốc → Phải
+                                <br><em>Ứng dụng: Lấy các node theo thứ tự tăng dần</em>
+                            </li>
+                            <li><strong>Post-order (LRN):</strong> Trái → Phải → Gốc
+                                <br><em>Ứng dụng: Xóa cây, tính biểu thức postfix</em>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Phần 5: Khái niệm nâng cao -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">5. Khái Niệm Nâng Cao</h6>
+                        
+                        <p><strong>5.1. Cân bằng cây (Balancing)</strong></p>
+                        <ul>
+                            <li><strong>Độ lệch (Balance Factor):</strong> chiều cao cây trái - chiều cao cây phải</li>
+                            <li><strong>Cây cân bằng:</strong> |BF| ≤ 1 tại mọi node</li>
+                            <li><strong>Các phép xoay:</strong> Left, Right, Left-Right, Right-Left</li>
+                        </ul>
+
+                        <p><strong>5.2. Lower Bound & Upper Bound</strong></p>
+                        <ul>
+                            <li><strong>Lower Bound(x):</strong> Giá trị nhỏ nhất ≥ x</li>
+                            <li><strong>Upper Bound(x):</strong> Giá trị nhỏ nhất > x</li>
+                            <li>Hữu ích trong tìm kiếm khoảng, truy vấn trên khoảng</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="startTourBtn" onclick="startTourFromModal()" style="display: none;">Bắt Đầu Tour Hướng Dẫn</button>
+                </div>
             </div>
         </div>
     </div>
