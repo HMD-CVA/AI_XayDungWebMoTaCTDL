@@ -60,198 +60,308 @@ const sidebarOverlay = document.querySelector('#sidebar-overlay')
 let sidebarVisible = false
 
 // Tutorial elements
-const tutorialOverlay = document.querySelector('.tutorial-overlay')
-const tutorialModal = document.querySelector('.tutorial-modal')
-const tutorialTitle = document.querySelector('.tutorial-title')
-const tutorialContent = document.querySelector('.tutorial-content')
-const tutorialProgress = document.querySelector('.tutorial-progress')
 const btnTutorial = document.querySelector('#btn-tutorial')
-const btnNextTutorial = document.querySelector('#btn-next-tutorial')
-const btnPreviousTutorial = document.querySelector('#btn-previous-tutorial')
-const btnSkipTutorial = document.querySelector('#btn-skip-tutorial')
 
-// Tutorial content
-const tutorialSteps = [
+// Tutorial function - open Bootstrap modal
+btnTutorial.onclick = () => {
+    const guideModal = new bootstrap.Modal(document.getElementById('guideModal'))
+    guideModal.show()
+    
+    // Start tour after closing modal
+    const modalElement = document.getElementById('guideModal')
+    const handleModalClose = function() {
+        setTimeout(() => startTour(), 500)
+        modalElement.removeEventListener('hidden.bs.modal', handleModalClose)
+    }
+    modalElement.addEventListener('hidden.bs.modal', handleModalClose)
+}
+
+// Show guide modal on first load, then start tour
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        const guideModal = new bootstrap.Modal(document.getElementById('guideModal'))
+        guideModal.show()
+        
+        // Start tour after closing modal
+        const modalElement = document.getElementById('guideModal')
+        const handleFirstLoad = function() {
+            setTimeout(() => startTour(), 500)
+            modalElement.removeEventListener('hidden.bs.modal', handleFirstLoad)
+        }
+        modalElement.addEventListener('hidden.bs.modal', handleFirstLoad)
+    }, 500)
+})
+
+// ==================== INTERACTIVE TOUR GUIDE ====================
+
+const tourSteps = [
     {
-        title: 'Chào mừng đến với LinkedList!',
-        content: `
-            <p>Chào mừng bạn đến với công cụ trực quan hóa <strong>Linked List</strong>!</p>
-            <p>Linked List là một cấu trúc dữ liệu tuyến tính, trong đó các phần tử không được lưu trữ liên tiếp trong bộ nhớ mà được liên kết với nhau thông qua con trỏ.</p>
-            <h4><i class="bi bi-bullseye text-primary"></i> Mục tiêu của tutorial này:</h4>
-            <ul>
-                <li>Hiểu cấu trúc cơ bản của Linked List</li>
-                <li>Nắm vững các thao tác cơ bản</li>
-                <li>Trực quan hóa cách hoạt động của từng thao tác</li>
-            </ul>
-        `,
+        target: '#btn-tutorial',
+        title: 'Xem Hướng Dẫn',
+        content: `<p><strong>Nút mở lại hướng dẫn:</strong></p>
+        <ul>
+            <li>Click vào đây bất cứ lúc nào để xem lại lý thuyết Linked List</li>
+            <li>Modal sẽ hiển thị đầy đủ kiến thức về cấu trúc, độ phức tạp, và cách sử dụng</li>
+        </ul>`,
+        position: 'bottom'
     },
     {
-        title: 'Cấu trúc Linked List',
-        content: `
-            <p>Một Linked List bao gồm các <strong>Node</strong>, mỗi node có hai phần:</p>
-            <h4><i class="bi bi-box text-primary"></i> Cấu trúc Node:</h4>
-            <ul>
-                <li><code>value</code>: Giá trị dữ liệu của node</li>
-                <li><code>next</code>: Con trỏ trỏ đến node tiếp theo</li>
-            </ul>
-            <h4><i class="bi bi-link-45deg text-primary"></i> Đặc điểm:</h4>
-            <ul>
-                <li><strong>Head</strong>: Node đầu tiên của danh sách</li>
-                <li><strong>Tail</strong>: Node cuối cùng của danh sách</li>
-                <li>Node cuối cùng có <code>next = null</code></li>
-            </ul>
-        `,
+        target: '#btn-add',
+        title: 'Thêm Node Vào Danh Sách',
+        content: `<p><strong>Nhóm chức năng thêm node:</strong></p>
+        <ul>
+            <li><strong>Add Head:</strong> Thêm node vào đầu danh sách - O(1)</li>
+            <li><strong>Add Tail:</strong> Thêm node vào cuối danh sách - O(1)</li>
+            <li><strong>Add at Index:</strong> Thêm node tại vị trí chỉ định - O(n)</li>
+        </ul>
+        <p><em>Click để mở modal nhập giá trị và chọn vị trí thêm</em></p>`,
+        position: 'bottom'
     },
     {
-        title: 'Thao tác Add (Thêm)',
-        content: `
-            <p>Có nhiều cách để thêm node vào Linked List:</p>
-            <h4><i class="bi bi-plus-circle text-success"></i> Các phương thức Add:</h4>
-            <ul>
-                <li><strong>Add Head</strong>: Thêm node vào đầu danh sách - O(1)</li>
-                <li><strong>Add Tail</strong>: Thêm node vào cuối danh sách - O(1)</li>
-                <li><strong>Add at Index</strong>: Thêm node tại vị trí chỉ định - O(n)</li>
-                <li><strong>Add Before/After</strong>: Thêm trước/sau một node cụ thể - O(n)</li>
-            </ul>
-            <p><i class="bi bi-lightbulb text-warning"></i> <em>Sử dụng nút <strong>Add</strong> trên toolbar để thực hành!</em></p>
-        `,
+        target: '#btn-remove',
+        title: 'Xóa Node Khỏi Danh Sách',
+        content: `<p><strong>Nhóm chức năng xóa node:</strong></p>
+        <ul>
+            <li><strong>Remove Head:</strong> Xóa node đầu tiên - O(1)</li>
+            <li><strong>Remove Tail:</strong> Xóa node cuối cùng - O(n)</li>
+            <li><strong>Remove at Index:</strong> Xóa node tại vị trí - O(n)</li>
+        </ul>
+        <p><em>Click để mở modal chọn phương thức xóa</em></p>`,
+        position: 'bottom'
     },
     {
-        title: 'Thao tác Remove (Xóa)',
-        content: `
-            <p>Xóa node khỏi Linked List cũng có nhiều cách:</p>
-            <h4><i class="bi bi-dash-circle text-danger"></i> Các phương thức Remove:</h4>
-            <ul>
-                <li><strong>Remove Head</strong>: Xóa node đầu tiên - O(1)</li>
-                <li><strong>Remove Tail</strong>: Xóa node cuối cùng - O(n)</li>
-                <li><strong>Remove at Index</strong>: Xóa node tại vị trí chỉ định - O(n)</li>
-                <li><strong>Remove Node</strong>: Xóa một node cụ thể - O(n)</li>
-            </ul>
-            <p><i class="bi bi-lightbulb text-warning"></i> <em>Khi xóa node, cần liên kết lại các node còn lại bằng cách cập nhật con trỏ <code>next</code></em></p>
-        `,
+        target: '#btn-search-value',
+        title: 'Tìm Kiếm Node',
+        content: `<p><strong>Nhóm chức năng tìm kiếm:</strong></p>
+        <ul>
+            <li><strong>By Value:</strong> Tìm node theo giá trị - O(n)</li>
+            <li><strong>By Index:</strong> Lấy node tại vị trí - O(n)</li>
+        </ul>
+        <p><em>Quan sát animation duyệt tuần tự từ head đến khi tìm thấy</em></p>`,
+        position: 'bottom'
     },
     {
-        title: 'Thao tác Search (Tìm kiếm)',
-        content: `
-            <p>Tìm kiếm trong Linked List luôn cần duyệt tuần tự từ đầu:</p>
-            <h4><i class="bi bi-search text-info"></i> Các phương thức Search:</h4>
-            <ul>
-                <li><strong>Search by Value</strong>: Tìm node theo giá trị - O(n)</li>
-                <li><strong>Search by Index</strong>: Lấy node tại vị trí - O(n)</li>
-            </ul>
-            <h4><i class="bi bi-stopwatch text-primary"></i> Độ phức tạp:</h4>
-            <p>Không giống như mảng (Array), Linked List không hỗ trợ truy cập trực tiếp theo chỉ số. Phải duyệt từ <code>head</code> cho đến vị trí cần tìm.</p>
-        `,
+        target: '#btn-create-random',
+        title: 'Tạo Danh Sách Ngẫu Nhiên',
+        content: `<p><strong>Tạo danh sách mẫu:</strong></p>
+        <ul>
+            <li>Nhập số lượng node (1-25)</li>
+            <li>Giá trị mỗi node: số ngẫu nhiên 1-100</li>
+            <li>Animation thêm dần từng node để quan sát</li>
+        </ul>
+        <p><em>Hữu ích để test các thao tác nhanh chóng</em></p>`,
+        position: 'bottom'
     },
     {
-        title: 'Các chức năng khác',
-        content: `
-            <p>Ngoài Add, Remove, Search còn có các thao tác tiện ích:</p>
-            <h4><i class="bi bi-tools text-primary"></i> Utility Functions:</h4>
-            <ul>
-                <li><strong>Random</strong>: Tạo danh sách ngẫu nhiên (1-25 nodes)</li>
-                <li><strong>Clear</strong>: Xóa toàn bộ danh sách</li>
-                <li><strong>Is Empty</strong>: Kiểm tra danh sách rỗng - O(1)</li>
-                <li><strong>Size</strong>: Đếm số lượng node - O(n)</li>
-            </ul>
-            <h4><i class="bi bi-gear text-secondary"></i> Settings:</h4>
-            <ul>
-                <li><strong>Step Delay</strong>: Điều chỉnh tốc độ animation (100ms - 1000ms)</li>
-            </ul>
-        `,
+        target: '#btn-clear',
+        title: 'Xóa Toàn Bộ Danh Sách',
+        content: `<p><strong>Xóa tất cả node:</strong></p>
+        <ul>
+            <li>Xóa toàn bộ danh sách và bắt đầu lại từ đầu</li>
+            <li>Animation fade-out cho tất cả node</li>
+        </ul>`,
+        position: 'bottom'
     },
     {
-        title: 'Sẵn sàng bắt đầu!',
-        content: `
-            <p><i class="bi bi-trophy text-warning"></i> Bạn đã hoàn thành tutorial cơ bản về Linked List!</p>
-            <h4><i class="bi bi-hand-thumbs-up text-success"></i> Hãy bắt đầu thực hành:</h4>
-            <ul>
-                <li>Nhấn <strong>Random</strong> để tạo danh sách mẫu</li>
-                <li>Thử các thao tác <strong>Add</strong>, <strong>Remove</strong>, <strong>Search</strong></li>
-                <li>Quan sát animation để hiểu cách Linked List hoạt động</li>
-                <li>Xem <strong>Pseudocode</strong> ở sidebar bên phải</li>
-            </ul>
-            <p><i class="bi bi-pin-angle text-danger"></i> <em>Bạn có thể mở lại tutorial bất cứ lúc nào bằng nút <strong>Tutorial</strong>!</em></p>
-        `,
+        target: '#btn-check-empty',
+        title: 'Kiểm Tra Danh Sách Rỗng',
+        content: `<p><strong>Kiểm tra danh sách rỗng:</strong></p>
+        <ul>
+            <li>Trả về <code>true</code> nếu <code>head == null</code></li>
+            <li>Trả về <code>false</code> nếu có node</li>
+            <li>Độ phức tạp: O(1)</li>
+        </ul>`,
+        position: 'bottom'
     },
+    {
+        target: '#btn-get-size',
+        title: 'Đếm Số Lượng Node',
+        content: `<p><strong>Đếm số node:</strong></p>
+        <ul>
+            <li>Duyệt từ head đến tail, đếm từng node</li>
+            <li>Animation highlight từng node khi đếm</li>
+            <li>Độ phức tạp: O(n)</li>
+        </ul>`,
+        position: 'bottom'
+    },
+    {
+        target: '#animation-speed-slider',
+        title: 'Điều Chỉnh Tốc Độ Animation',
+        content: `<p><strong>Điều chỉnh tốc độ:</strong></p>
+        <ul>
+            <li><strong>100ms:</strong> Rất nhanh - dùng khi đã quen</li>
+            <li><strong>500ms:</strong> Vừa phải - mặc định</li>
+            <li><strong>1000ms:</strong> Chậm - dễ quan sát từng bước</li>
+        </ul>
+        <p><em>Kéo thanh trượt để thay đổi</em></p>`,
+        position: 'bottom'
+    },
+    {
+        target: '.display-area',
+        title: 'Hiển Thị Danh Sách Linked List',
+        content: `<p><strong>Khu vực hiển thị danh sách:</strong></p>
+        <ul>
+            <li><strong>Node:</strong> Hộp chứa giá trị và con trỏ next</li>
+            <li><strong>Arrow:</strong> Mũi tên liên kết giữa các node</li>
+            <li><strong>Click vào node:</strong> Mở menu thao tác (Add Before/After, Delete)</li>
+        </ul>`,
+        position: 'bottom'
+    },
+    {
+        target: '#toggle-sidebar',
+        title: 'Xem Pseudocode Thuật Toán',
+        content: `<p><strong>Panel hiển thị mã giả:</strong></p>
+        <ul>
+            <li>Click để mở/đóng sidebar</li>
+            <li>Xem pseudocode của thuật toán đang thực hiện</li>
+            <li>Hiểu logic implement các thao tác</li>
+        </ul>
+        <p><strong>Hoàn thành!</strong> Bây giờ hãy thử tạo danh sách và khám phá!</p>`,
+        position: 'left'
+    }
 ]
 
-let currentTutorialStep = 0
+let currentTourStep = 0
+let tourActive = false
 
-// Tutorial functions
-function showTutorial(step) {
-    if (step >= tutorialSteps.length) {
-        closeTutorial()
+function startTour() {
+    currentTourStep = 0
+    tourActive = true
+    document.getElementById('tourOverlay').style.display = 'block'
+    showTourStep(currentTourStep)
+}
+
+function showTourStep(stepIndex) {
+    if (stepIndex < 0 || stepIndex >= tourSteps.length) return
+    
+    const step = tourSteps[stepIndex]
+    const targetElement = document.querySelector(step.target)
+    
+    if (!targetElement) {
+        console.error('Target element not found:', step.target)
         return
     }
-    if (step < 0) {
-        step = 0
+    
+    // Reset previous highlighted element
+    const previousElement = document.querySelector('[data-tour-active=\"true\"]')
+    if (previousElement && previousElement !== targetElement) {
+        previousElement.removeAttribute('data-tour-active')
     }
+    
+    // Update content
+    document.getElementById('tourTitle').innerHTML = step.title
+    document.getElementById('tourContent').innerHTML = step.content
+    
+    // Update buttons
+    document.getElementById('tourPrev').disabled = stepIndex === 0
+    document.getElementById('tourNext').textContent = 
+        stepIndex === tourSteps.length - 1 ? 'Hoàn thành' : 'Tiếp →'
+    
+    // Scroll element into view
+    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    
+    // Wait for scroll to complete before positioning
+    setTimeout(() => {
+        targetElement.setAttribute('data-tour-active', 'true')
+        
+        // Position spotlight
+        const rect = targetElement.getBoundingClientRect()
+        const spotlight = document.getElementById('tourSpotlight')
+        const padding = 10
+        
+        spotlight.style.left = rect.left - padding + 'px'
+        spotlight.style.top = rect.top - padding + 'px'
+        spotlight.style.width = rect.width + (padding * 2) + 'px'
+        spotlight.style.height = rect.height + (padding * 2) + 'px'
+        
+        // Position popup
+        positionTourPopup(rect, step.position)
+    }, 100)
+}
 
-    currentTutorialStep = step
-    const tutorialData = tutorialSteps[step]
+function positionTourPopup(targetRect, position) {
+    const popup = document.getElementById('tourPopup')
+    popup.style.display = 'block'
+    popup.style.opacity = '1'
+    
+    const popupRect = popup.getBoundingClientRect()
+    const padding = 20
+    
+    let left, top
+    
+    switch(position) {
+        case 'right':
+            left = targetRect.right + padding
+            top = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2)
+            break
+        case 'left':
+            left = targetRect.left - popupRect.width - padding
+            top = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2)
+            break
+        case 'top':
+            left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2)
+            top = targetRect.top - popupRect.height - padding
+            break
+        case 'bottom':
+        default:
+            left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2)
+            top = targetRect.bottom + padding
+            break
+    }
+    
+    // Keep popup within viewport
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+    
+    if (left < 10) left = 10
+    if (left + popupRect.width > viewportWidth - 10) {
+        left = viewportWidth - popupRect.width - 10
+    }
+    if (top < 10) top = 10
+    if (top + popupRect.height > viewportHeight - 10) {
+        top = viewportHeight - popupRect.height - 10
+    }
+    
+    popup.style.left = left + 'px'
+    popup.style.top = top + 'px'
+}
 
-    tutorialTitle.textContent = tutorialData.title
-    tutorialContent.innerHTML = tutorialData.content
-    tutorialProgress.textContent = `${step + 1} / ${tutorialSteps.length}`
+function endTour() {
+    tourActive = false
+    document.getElementById('tourOverlay').style.display = 'none'
+    const activeElement = document.querySelector('[data-tour-active=\"true\"]')
+    if (activeElement) {
+        activeElement.removeAttribute('data-tour-active')
+    }
+}
 
-    // Update Next button text
-    if (step === tutorialSteps.length - 1) {
-        btnNextTutorial.textContent = 'Finish'
+// Tour control buttons
+document.getElementById('tourPrev').onclick = () => {
+    if (currentTourStep > 0) {
+        currentTourStep--
+        showTourStep(currentTourStep)
+    }
+}
+
+document.getElementById('tourNext').onclick = () => {
+    if (currentTourStep < tourSteps.length - 1) {
+        currentTourStep++
+        showTourStep(currentTourStep)
     } else {
-        btnNextTutorial.textContent = 'Next'
-    }
-
-    // Show/hide Previous button
-    if (step === 0) {
-        btnPreviousTutorial.style.display = 'none'
-    } else {
-        btnPreviousTutorial.style.display = 'block'
-    }
-
-    tutorialOverlay.classList.add('active')
-}
-
-function closeTutorial() {
-    tutorialOverlay.classList.remove('active')
-    localStorage.setItem('linkedListTutorialCompleted', 'true')
-}
-
-function startTutorial() {
-    currentTutorialStep = 0
-    showTutorial(0)
-}
-
-// Tutorial event listeners
-btnTutorial.onclick = () => {
-    startTutorial()
-}
-
-btnNextTutorial.onclick = () => {
-    showTutorial(currentTutorialStep + 1)
-}
-
-btnPreviousTutorial.onclick = () => {
-    showTutorial(currentTutorialStep - 1)
-}
-
-btnSkipTutorial.onclick = () => {
-    closeTutorial()
-}
-
-tutorialOverlay.onclick = (e) => {
-    if (e.target === tutorialOverlay) {
-        closeTutorial()
+        endTour()
     }
 }
 
-// Check if tutorial was completed, if not show it on first load
-window.addEventListener('load', () => {
-    const tutorialCompleted = localStorage.getItem('linkedListTutorialCompleted')
-    if (!tutorialCompleted) {
-        setTimeout(() => startTutorial(), 500)
+document.getElementById('tourSkip').onclick = () => {
+    endTour()
+}
+
+// Click outside popup to skip
+document.getElementById('tourOverlay').onclick = (e) => {
+    if (e.target === document.getElementById('tourOverlay')) {
+        endTour()
     }
-})
+}
 
 // Toggle sidebar
 toggleSidebarBtn.onclick = () => {

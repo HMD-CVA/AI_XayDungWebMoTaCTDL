@@ -12,8 +12,15 @@
 <body>
 
     <header class="text-white py-4 shadow-sm">
-        <div class="container">
-            <i class="bi bi-link-45deg"></i> LinkedList Visualizer
+        <div class="container header-bar">
+            <div class="d-flex align-items-center gap-2">
+                <span class="header-icon"><i class="bi bi-link-45deg"></i></span>
+                <span>LinkedList Visualizer</span>
+            </div>
+            <a href="../index.html" class="home-btn">
+                <i class="bi bi-house-door"></i>
+                <span>Home</span>
+            </a>
         </div>
     </header>
 
@@ -176,20 +183,177 @@
         </div>
     </div>
 
-    <!-- Tutorial Modal -->
-    <div class="tutorial-overlay">
-        <div class="tutorial-modal">
-            <div class="tutorial-header">
-                <h3 class="tutorial-title"></h3>
-                <span class="tutorial-progress"></span>
-            </div>
-            <div class="tutorial-content"></div>
-            <div class="tutorial-footer">
-                <button class="btn btn-outline-secondary" id="btn-previous-tutorial">Previous</button>
-                <div class="ms-auto d-flex gap-2">
-                    <button class="btn btn-secondary" id="btn-skip-tutorial">Skip All</button>
-                    <button class="btn btn-primary" id="btn-next-tutorial">Next</button>
+    <!-- Modal Hướng dẫn sử dụng -->
+    <div class="modal fade" id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="guideModalLabel">Linked List (Danh Sách Liên Kết)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body">
+                    <!-- Phần 1: Lý thuyết cơ bản -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">1. Giới Thiệu Linked List</h6>
+                        <p><strong>Định nghĩa:</strong> Linked List là cấu trúc dữ liệu tuyến tính trong đó các phần tử không được lưu trữ liên tiếp trong bộ nhớ mà được liên kết với nhau thông qua con trỏ.</p>
+                        <ul>
+                            <li><strong>Node:</strong> Đơn vị cơ bản gồm 2 phần:
+                                <ul>
+                                    <li><code>value</code>: Giá trị dữ liệu</li>
+                                    <li><code>next</code>: Con trỏ đến node tiếp theo</li>
+                                </ul>
+                            </li>
+                            <li><strong>Head:</strong> Node đầu tiên của danh sách</li>
+                            <li><strong>Tail:</strong> Node cuối cùng (next = null)</li>
+                            <li><strong>Ưu điểm:</strong> Thêm/xóa nhanh, không cần cấp phát trước bộ nhớ</li>
+                            <li><strong>Nhược điểm:</strong> Không truy cập trực tiếp theo index, tốn bộ nhớ cho con trỏ</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phần 2: Độ phức tạp -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">2. Độ Phức Tạp Thuật Toán</h6>
+                        <table class="table table-bordered table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Thao tác</th>
+                                    <th>Độ phức tạp</th>
+                                    <th>Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Add Head</td>
+                                    <td><code>O(1)</code></td>
+                                    <td>Truy cập trực tiếp head</td>
+                                </tr>
+                                <tr>
+                                    <td>Add Tail</td>
+                                    <td><code>O(1)</code></td>
+                                    <td>Với tail pointer</td>
+                                </tr>
+                                <tr>
+                                    <td>Add at Index</td>
+                                    <td><code>O(n)</code></td>
+                                    <td>Phải duyệt đến vị trí</td>
+                                </tr>
+                                <tr>
+                                    <td>Remove Head</td>
+                                    <td><code>O(1)</code></td>
+                                    <td>Truy cập trực tiếp head</td>
+                                </tr>
+                                <tr>
+                                    <td>Remove Tail</td>
+                                    <td><code>O(n)</code></td>
+                                    <td>Phải tìm node trước tail</td>
+                                </tr>
+                                <tr>
+                                    <td>Search</td>
+                                    <td><code>O(n)</code></td>
+                                    <td>Duyệt tuần tự từ head</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Phần 3: Các thao tác cơ bản -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">3. Các Thao Tác Cơ Bản</h6>
+                        
+                        <p><strong>3.1. Thêm node (Add)</strong></p>
+                        <ul>
+                            <li><strong>Add Head:</strong> Tạo node mới → <code>newNode.next = head</code> → <code>head = newNode</code></li>
+                            <li><strong>Add Tail:</strong> Tạo node mới → <code>tail.next = newNode</code> → <code>tail = newNode</code></li>
+                            <li><strong>Add at Index:</strong> Duyệt đến vị trí (index-1) → Chèn node vào giữa</li>
+                            <li><strong>Add Before/After:</strong> Tìm node tham chiếu → Chèn trước/sau node đó</li>
+                        </ul>
+
+                        <p><strong>3.2. Xóa node (Remove)</strong></p>
+                        <ul>
+                            <li><strong>Remove Head:</strong> <code>head = head.next</code> (nếu có)</li>
+                            <li><strong>Remove Tail:</strong> Duyệt đến node trước tail → <code>prevNode.next = null</code> → <code>tail = prevNode</code></li>
+                            <li><strong>Remove at Index:</strong> Duyệt đến vị trí → Bỏ qua node cần xóa trong chuỗi liên kết</li>
+                            <li><strong>Lưu ý:</strong> Phải cập nhật con trỏ <code>next</code> để không mất liên kết</li>
+                        </ul>
+
+                        <p><strong>3.3. Tìm kiếm (Search)</strong></p>
+                        <ul>
+                            <li><strong>By Value:</strong> Duyệt từ head, so sánh giá trị từng node cho đến khi tìm thấy hoặc gặp null</li>
+                            <li><strong>By Index:</strong> Duyệt từ head, đếm từ 0 đến index cần tìm</li>
+                            <li><strong>Độ phức tạp:</strong> O(n) - phải duyệt tuần tự</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phần 4: Khái niệm nâng cao -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">4. Tính Năng Nâng Cao</h6>
+                        
+                        <p><strong>4.1. Animation & Visualization</strong></p>
+                        <ul>
+                            <li><strong>Step Delay:</strong> Điều chỉnh tốc độ animation (100ms - 1000ms) để quan sát rõ từng bước</li>
+                            <li><strong>Highlight:</strong> Node đang xử lý được tô sáng màu khác</li>
+                            <li><strong>Pseudocode:</strong> Xem mã giả của thuật toán đang thực hiện ở sidebar</li>
+                        </ul>
+
+                        <p><strong>4.2. Random Generation</strong></p>
+                        <ul>
+                            <li>Tạo danh sách ngẫu nhiên từ 1-25 node</li>
+                            <li>Giá trị mỗi node: số nguyên ngẫu nhiên 1-100</li>
+                            <li>Animation thêm dần từng node để quan sát quá trình xây dựng</li>
+                        </ul>
+
+                        <p><strong>4.3. Persistent Storage</strong></p>
+                        <ul>
+                            <li>Danh sách tự động lưu vào LocalStorage</li>
+                            <li>Khôi phục lại khi reload trang</li>
+                            <li>Dữ liệu không bị mất khi đóng tab</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phần 5: Hướng dẫn sử dụng -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">5. Hướng Dẫn Sử Dụng</h6>
+                        
+                        <p><strong>Bước 1: Tạo danh sách</strong></p>
+                        <ul>
+                            <li>Click <strong>Random</strong> → Nhập số lượng node (1-25) → <strong>Go</strong></li>
+                            <li>Hoặc click <strong>Add</strong> → Nhập giá trị → Chọn <strong>Add Head/Tail/Index</strong></li>
+                        </ul>
+
+                        <p><strong>Bước 2: Thao tác với node</strong></p>
+                        <ul>
+                            <li><strong>Click vào node:</strong> Mở menu thao tác (Add Before/After, Delete, Update)</li>
+                            <li><strong>Search:</strong> Tìm theo Value hoặc Index để quan sát quá trình duyệt</li>
+                            <li><strong>Remove:</strong> Xóa Head/Tail/Index hoặc click node rồi Delete</li>
+                        </ul>
+
+                        <p><strong>Bước 3: Quan sát & Học tập</strong></p>
+                        <ul>
+                            <li>Mở <strong>Pseudocode</strong> ở sidebar để xem mã giả</li>
+                            <li>Điều chỉnh <strong>Step Delay</strong> để xem animation chậm/nhanh</li>
+                            <li>Thử các thao tác khác nhau để hiểu rõ cách Linked List hoạt động</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour Guide Overlay -->
+    <div id="tourOverlay" class="tour-overlay">
+        <div id="tourSpotlight" class="tour-spotlight"></div>
+        <div id="tourPopup" class="tour-popup">
+            <div class="tour-header">
+                <h5 id="tourTitle">Tour Hướng Dẫn</h5>
+                <button id="tourSkip" class="btn btn-sm btn-light tour-skip-btn">Bỏ qua</button>
+            </div>
+            <div id="tourContent" class="tour-content"></div>
+            <div class="tour-footer">
+                <button id="tourPrev" class="btn btn-sm btn-outline-secondary">← Trước</button>
+                <button id="tourNext" class="btn btn-sm btn-primary">Tiếp →</button>
             </div>
         </div>
     </div>
