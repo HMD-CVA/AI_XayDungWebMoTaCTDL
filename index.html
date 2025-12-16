@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithm Visualizations</title>
+    <style>
+        :root {
+            --bg: #f8f9fb;
+            --card: #ffffff;
+            --accent: #4361ee;
+            --text: #2d3436;
+            --muted: #6b7280;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(67, 97, 238, 0.12), transparent 32%),
+                radial-gradient(circle at 78% 12%, rgba(76, 201, 240, 0.12), transparent 30%),
+                linear-gradient(135deg, #f8fbff 0%, #eef2ff 60%, #f8f9fb 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 16px;
+        }
+
+        .shell {
+            width: min(1100px, 100%);
+            background: var(--card);
+            border: 1px solid rgba(67, 97, 238, 0.08);
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow:
+                0 25px 70px rgba(67, 97, 238, 0.16),
+                0 10px 30px rgba(17, 24, 39, 0.06);
+        }
+
+        .shell::before {
+            content: "";
+            position: absolute;
+            inset: -60px;
+            background:
+                radial-gradient(circle at 25% 20%, rgba(67, 97, 238, 0.08), transparent 30%),
+                radial-gradient(circle at 80% 0%, rgba(76, 201, 240, 0.12), transparent 32%),
+                repeating-linear-gradient(45deg, rgba(67, 97, 238, 0.06) 0 12px, transparent 12px 24px);
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(18px);
+        }
+
+        .shell > * { position: relative; z-index: 1; }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid rgba(67, 97, 238, 0.12);
+            border-radius: 14px;
+            padding: 18px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 36px rgba(67, 97, 238, 0.22);
+            border-color: rgba(67, 97, 238, 0.35);
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            color: var(--accent);
+            background: rgba(67, 97, 238, 0.12);
+            border: 1px solid rgba(67, 97, 238, 0.28);
+        }
+
+        .card h3 {
+            margin: 12px 0 6px;
+            font-size: 18px;
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .card a {
+            margin-top: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .shell { padding: 24px; }
+            .title { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <div class="header">
+            <div>
+                <h1 class="title">Algorithm Visualizations</h1>
+                <p class="subtitle">Chọn một thuật toán để xem mô phỏng trực quan</p>
+            </div>
+        </div>
+
+        <section class="grid">
+            <article class="card">
+                <span class="pill">Linked List</span>
+                <h3>Linked List Visualizer</h3>
+                <p>Thêm, xóa, tìm kiếm và xem pseudocode với animation từng bước.</p>
+                <a href="./LinkedList/index.html">Mở visualizer →</a>
+            </article>
+
+            <article class="card">
+                <span class="pill">Sorting</span>
+                <h3>Bubble Sort Visualizer</h3>
+                <p>Quan sát quá trình đổi chỗ và so sánh trong Bubble Sort theo thời gian.</p>
+                <a href="./BubbleSort/index.html">Mở visualizer →</a>
+            </article>
+
+            <article class="card">
+                <span class="pill">Tree</span>
+                <h3>Binary Search Tree</h3>
+                <p>Chèn, xóa, duyệt và quan sát cấu trúc BST thay đổi trực quan.</p>
+                <a href="./BinaryTree/home.html">Mở visualizer →</a>
+            </article>
+        </section>
+    </main>
+</body>
+</html>
