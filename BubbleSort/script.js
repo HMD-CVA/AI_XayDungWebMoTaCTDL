@@ -21,8 +21,10 @@ const sidebarOverlay = document.getElementById('sidebar-overlay');
 
 // State
 let array = [];
+let initialArray = []; // Store the initial state
 let delay = 500;
 let isSorting = false;
+let abortSorting = false; // Flag to abort sorting
 
 // Pseudocode
 const bubbleSortPseudocode = `
@@ -168,32 +170,52 @@ btnCustomGo.onclick = () => {
 
     // Generate from data
     array = data;
+    initialArray = [...array]; // Save initial state
     renderArray(array);
     overlayCustomInput.style.display = 'none';
 };
 
 btnReset.onclick = () => {
     if (isSorting) {
-        // Reload page to stop sorting nicely
-        location.reload();
+        abortSorting = true;
     } else {
-        generateArray(array.length);
+        // Just reset to initial array
+        array = [...initialArray];
+        renderArray(array);
     }
 }
 
 btnStart.onclick = async () => {
     if (isSorting) return;
     isSorting = true;
+    abortSorting = false;
     disableControls(true);
-    await bubbleSort();
-    isSorting = false;
-    disableControls(false);
-    Swal.fire({
-        icon: 'success',
-        title: 'Sorted!',
-        text: 'The array has been sorted successfully.',
-        confirmButtonColor: '#43e97b'
-    });
+    try {
+        await bubbleSort();
+        Swal.fire({
+            icon: 'success',
+            title: 'Sorted!',
+            text: 'The array has been sorted successfully.',
+            confirmButtonColor: '#43e97b'
+        });
+    } catch (error) {
+        if (error === 'SortingAborted') {
+            console.log('Sorting aborted by user');
+            // Reset to initial state after abort
+            array = [...initialArray];
+            renderArray(array);
+            // Re-render highlight removal
+            document.querySelectorAll('#pseudocode-content span').forEach(el => {
+                el.style.backgroundColor = 'transparent';
+                el.style.color = '#2c3e50';
+            });
+        } else {
+            console.error(error);
+        }
+    } finally {
+        isSorting = false;
+        disableControls(false);
+    }
 };
 
 
@@ -248,6 +270,7 @@ function generateArray(n) {
         const value = Math.floor(Math.random() * (max - min + 1)) + min;
         randomData.push(value);
     }
+    initialArray = [...randomData]; // Save initial state
     renderArray(randomData);
 }
 
@@ -276,6 +299,7 @@ async function highlightLine(lineId) {
 }
 
 async function wait() {
+    if (abortSorting) throw 'SortingAborted';
     return new Promise(resolve => setTimeout(resolve, delay));
 }
 
