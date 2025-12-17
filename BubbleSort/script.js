@@ -124,8 +124,8 @@ btnGo.onclick = () => {
     } else {
         Swal.fire({
             icon: 'error',
-            title: 'Inavlid Size',
-            text: 'Please enter a size between 5 and 50.',
+            title: 'Kích thước không hợp lệ',
+            text: 'Vui lòng nhập kích thước từ 5 đến 50.',
             confirmButtonColor: '#ff6b6b'
         });
     }
@@ -141,8 +141,8 @@ btnCustomGo.onclick = () => {
     if (data.length < 3 || data.length > 50) {
         Swal.fire({
             icon: 'error',
-            title: 'Invalid Input',
-            text: 'Please enter between 3 and 50 numbers.',
+            title: 'Dữ liệu không hợp lệ',
+            text: 'Vui lòng nhập từ 3 đến 50 số.',
             confirmButtonColor: '#ff6b6b'
         });
         return;
@@ -151,8 +151,8 @@ btnCustomGo.onclick = () => {
     if (data.some(isNaN)) {
         Swal.fire({
             icon: 'error',
-            title: 'Invalid Input',
-            text: 'Please enter valid numbers only.',
+            title: 'Dữ liệu không hợp lệ',
+            text: 'Vui lòng chỉ nhập số hợp lệ.',
             confirmButtonColor: '#ff6b6b'
         });
         return;
@@ -161,8 +161,8 @@ btnCustomGo.onclick = () => {
     if (data.some(x => x < 0 || x > 200)) {
         Swal.fire({
             icon: 'warning',
-            title: 'Value Warning',
-            text: 'For best visualization, try values between 0 and 100.',
+            title: 'Cảnh báo giá trị',
+            text: 'Để hiển thị tốt nhất, hãy nhập giá trị từ 0 đến 100.',
             confirmButtonColor: '#f1c40f'
         });
         // We still allow it? let's clamp or allow
@@ -194,8 +194,8 @@ btnStart.onclick = async () => {
         await bubbleSort();
         Swal.fire({
             icon: 'success',
-            title: 'Sorted!',
-            text: 'The array has been sorted successfully.',
+            title: 'Đã Sắp Xếp!',
+            text: 'Mảng đã được sắp xếp thành công.',
             confirmButtonColor: '#43e97b'
         });
     } catch (error) {
@@ -451,9 +451,9 @@ function showTutorial(step) {
 
     // Update buttons
     if (step === tutorialSteps.length - 1) {
-        btnNextTutorial.textContent = "Finish";
+        btnNextTutorial.textContent = "Hoàn tất";
     } else {
-        btnNextTutorial.textContent = "Next";
+        btnNextTutorial.textContent = "Tiếp";
     }
 
     if (step === 0) {

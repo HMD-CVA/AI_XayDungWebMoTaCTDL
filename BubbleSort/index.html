@@ -33,12 +33,12 @@
                             <button id="btn-tutorial" class="btn btn-outline-primary"><i
                                     class="bi bi-question-circle"></i>
                                 Hướng dẫn</button>
-                            <button id="btn-create-random" class="btn btn-warning"><i class="bi bi-shuffle"></i> Random
-                                Array</button>
-                            <button id="btn-custom-input" class="btn btn-info"><i class="bi bi-keyboard"></i> Custom
-                                Input</button>
-                            <button id="btn-start" class="btn btn-success"><i class="bi bi-play-circle"></i> Start
-                                Sort</button>
+                            <button id="btn-create-random" class="btn btn-warning"><i class="bi bi-shuffle"></i> Tạo
+                                Ngẫu Nhiên</button>
+                            <button id="btn-custom-input" class="btn btn-info"><i class="bi bi-keyboard"></i> Nhập Dữ
+                                Liệu</button>
+                            <button id="btn-start" class="btn btn-success"><i class="bi bi-play-circle"></i> Bắt
+                                Đầu</button>
                             <button id="btn-reset" class="btn btn-secondary"><i
                                     class="bi bi-arrow-counterclockwise"></i> Reset</button>
                         </div>
@@ -90,11 +90,11 @@
     <div class="overlay-create-random">
         <div class="modal-create-random card shadow-lg">
             <div class="card-body">
-                <h5 class="card-title mb-3">Create Random Array</h5>
+                <h5 class="card-title mb-3">Tạo Mảng Ngẫu Nhiên</h5>
                 <div class="input-group">
-                    <span class="input-group-text">Size (n) =</span>
+                    <span class="input-group-text">Kích thước (n) =</span>
                     <input class="number-n form-control" type="number" placeholder="10-50" min="5" max="50" value="20">
-                    <button id="btn-go" class="btn btn-primary"><i class="bi bi-check-lg"></i> Go</button>
+                    <button id="btn-go" class="btn btn-primary"><i class="bi bi-check-lg"></i> Tạo</button>
                 </div>
             </div>
         </div>
@@ -106,13 +106,13 @@
         <div class="modal-custom-input card shadow-lg"
             style="position: absolute; background: #fff; width: 350px; border-radius: 12px;">
             <div class="card-body">
-                <h5 class="card-title mb-3">Custom Input</h5>
+                <h5 class="card-title mb-3">Nhập Dữ Liệu Tùy Chỉnh</h5>
                 <div class="mb-2">
-                    <small class="text-muted">Enter numbers separated by comma (e.g. 10, 5, 30)</small>
+                    <small class="text-muted">Nhập các số cách nhau bởi dấu phẩy (vd: 10, 5, 30)</small>
                 </div>
                 <div class="input-group">
                     <input id="input-custom-data" class="form-control" type="text" placeholder="10, 20, 5, ...">
-                    <button id="btn-custom-go" class="btn btn-primary"><i class="bi bi-check-lg"></i> Go</button>
+                    <button id="btn-custom-go" class="btn btn-primary"><i class="bi bi-check-lg"></i> Tạo</button>
                 </div>
             </div>
         </div>
@@ -127,10 +127,10 @@
             </div>
             <div class="tutorial-content"></div>
             <div class="tutorial-footer">
-                <button class="btn btn-outline-secondary" id="btn-previous-tutorial">Previous</button>
+                <button class="btn btn-outline-secondary" id="btn-previous-tutorial">Trước</button>
                 <div class="ms-auto d-flex gap-2">
-                    <button class="btn btn-secondary" id="btn-skip-tutorial">Skip All</button>
-                    <button class="btn btn-primary" id="btn-next-tutorial">Next</button>
+                    <button class="btn btn-secondary" id="btn-skip-tutorial">Bỏ qua</button>
+                    <button class="btn btn-primary" id="btn-next-tutorial">Tiếp</button>
                 </div>
             </div>
         </div>
