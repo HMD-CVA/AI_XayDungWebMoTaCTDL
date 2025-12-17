@@ -19,6 +19,28 @@
     box-sizing: border-box;
 }
 
+.home-btn {
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.14);
+    color: white;
+    font-weight: 600;
+    padding: 8px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.home-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: var(--background);
