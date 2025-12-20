@@ -386,124 +386,31 @@ async function bubbleSort() {
 
 // --- Tutorial Logic ---
 
-const tutorialOverlay = document.querySelector(".tutorial-overlay");
-const tutorialModal = document.querySelector(".tutorial-modal");
-const tutorialTitle = document.querySelector(".tutorial-title");
-const tutorialContent = document.querySelector(".tutorial-content");
-const tutorialProgress = document.querySelector(".tutorial-progress");
 const btnTutorial = document.getElementById("btn-tutorial");
-const btnNextTutorial = document.getElementById("btn-next-tutorial");
-const btnPreviousTutorial = document.getElementById("btn-previous-tutorial");
-const btnSkipTutorial = document.getElementById("btn-skip-tutorial");
+const guideModalEl = document.getElementById('guideModal');
+let guideModal;
 
-const tutorialSteps = [
-    {
-        title: "Chào mừng đến với Bubble Sort Visualizer!",
-        content: `
-            <p>Xin chào! Công cụ này sẽ giúp bạn trực quan hóa và hiểu thuật toán <strong>Bubble Sort (Sắp xếp nổi bọt)</strong>.</p>
-            <p>Bubble Sort là một trong những thuật toán sắp xếp đơn giản nhất để hiểu và cài đặt.</p>
-            <h4><i class="bi bi-bullseye text-primary"></i> Mục tiêu:</h4>
-            <ul>
-                <li>Hiểu cách Bubble Sort so sánh và hoán đổi các phần tử.</li>
-                <li>Hình dung hiệu ứng "nổi bọt" của các phần tử lớn nhất.</li>
-                <li>Nắm vững độ phức tạp thời gian và logic hoạt động.</li>
-            </ul>
-        `
-    },
-    {
-        title: "Bubble Sort là gì?",
-        content: `
-            <p><strong>Bubble Sort</strong> là một thuật toán dựa trên so sánh.</p>
-            <h4><i class="bi bi-gear text-primary"></i> Cơ chế:</h4>
-            <ul>
-                <li>Nó lặp đi lặp lại qua danh sách.</li>
-                <li>So sánh các phần tử liền kề (các cặp).</li>
-                <li><strong>Hoán đổi</strong> chúng nếu chúng sai thứ tự (ví dụ: trái > phải).</li>
-            </ul>
-            <p>Qua từng lượt, phần tử chưa được sắp xếp lớn nhất sẽ "nổi" lên vị trí đúng của nó ở cuối danh sách.</p>
-        `
-    },
-    {
-        title: "Hãy cùng thử thực hiện nhé",
-        content: `
-            <p>Bạn đã nắm được lý thuyết cơ bản! <i class="bi bi-check-circle-fill text-success"></i></p>
-            <p>Bây giờ, hãy cùng khám phá chi tiết các chức năng trên giao diện (như tạo mảng, chỉnh tốc độ, mã giả...) qua <strong>Tour hướng dẫn tương tác</strong>.</p>
-            <p>Nhấn <strong>Finish</strong> để bắt đầu Tour ngay nhé!</p>
-        `
-    }
-];
-
-let currentTutorialStep = 0;
-
-function showTutorial(step) {
-    if (step >= tutorialSteps.length) {
-        closeTutorial();
-        return;
-    }
-    if (step < 0) step = 0;
-
-    currentTutorialStep = step;
-    const data = tutorialSteps[step];
-
-    tutorialTitle.textContent = data.title;
-    tutorialContent.innerHTML = data.content;
-    tutorialProgress.textContent = `${step + 1} / ${tutorialSteps.length}`;
-
-    // Update buttons
-    if (step === tutorialSteps.length - 1) {
-        btnNextTutorial.textContent = "Hoàn tất";
-    } else {
-        btnNextTutorial.textContent = "Tiếp";
-    }
-
-    if (step === 0) {
-        btnPreviousTutorial.style.display = "none";
-    } else {
-        btnPreviousTutorial.style.display = "block";
-    }
-
-    tutorialOverlay.classList.add("active");
+if (guideModalEl) {
+    guideModal = new bootstrap.Modal(guideModalEl);
 }
 
-function closeTutorial() {
-    tutorialOverlay.classList.remove("active");
-    // Not setting flag here anymore, let user choose when to use tour
-}
-
-function startTutorial() {
-    currentTutorialStep = 0;
-    showTutorial(0);
+function setupTourOnClose() {
+    if (!guideModalEl) return;
+    const handleModalClose = function () {
+        setTimeout(() => startTour(), 500);
+        guideModalEl.removeEventListener('hidden.bs.modal', handleModalClose);
+    }
+    guideModalEl.addEventListener('hidden.bs.modal', handleModalClose);
 }
 
 // Event Listeners for Tutorial Button
-if (btnTutorial) {
-    btnTutorial.onclick = startTutorial;
+if (btnTutorial && guideModal) {
+    btnTutorial.onclick = () => {
+        guideModal.show();
+        setupTourOnClose();
+    };
 }
 
-// Navigation Buttons for Modal
-if (btnNextTutorial) {
-    btnNextTutorial.onclick = () => {
-        if (currentTutorialStep < tutorialSteps.length - 1) {
-            showTutorial(currentTutorialStep + 1);
-        } else {
-            closeTutorial();
-            setTimeout(startTour, 300); // Start Tour after Tutorial finishes
-        }
-    };
-}
-if (btnPreviousTutorial) {
-    btnPreviousTutorial.onclick = () => showTutorial(currentTutorialStep - 1);
-}
-if (btnSkipTutorial) {
-    btnSkipTutorial.onclick = closeTutorial;
-}
-if (tutorialOverlay) {
-    tutorialOverlay.onclick = (e) => {
-        if (e.target === tutorialOverlay) {
-            closeTutorial();
-        }
-    };
-}
 
 
 // --- Tour Guide Logic ---
@@ -516,20 +423,39 @@ const tourSteps = [
         position: "center"
     },
     {
-        title: "Tạo Mảng Dữ Liệu",
-        content: `
-            <ul>
-                <li><strong><i class="bi bi-shuffle"></i> Random Array:</strong> Tạo mảng ngẫu nhiên mới. Bạn có thể chọn kích thước (Size) ở cửa sổ hiện ra.</li>
-                <li><strong><i class="bi bi-keyboard"></i> Custom Input:</strong> Tự nhập các số của bạn (cách nhau bởi dấu phẩy) để kiểm thử các trường hợp cụ thể.</li>
-            </ul>
-        `,
-        target: ".function-card > div > div:first-child",
+        title: "Hướng dẫn Sử Dụng",
+        content: "Click vào nút này để xem lại hướng dẫn chi tiết và lý thuyết về Bubble Sort bất cứ lúc nào.",
+        target: "#btn-tutorial",
+        position: "bottom"
+    },
+    {
+        title: "Tạo Mảng Ngẫu Nhiên",
+        content: "Tạo một mảng mới với các giá trị ngẫu nhiên. Bạn có thể tùy chỉnh kích thước mảng (số lượng phần tử) trong hộp thoại hiện ra.",
+        target: "#btn-create-random",
+        position: "bottom"
+    },
+    {
+        title: "Nhập Dữ Liệu Tùy Chỉnh",
+        content: "Cho phép bạn tự nhập dãy số của riêng mình (cách nhau bởi dấu phẩy, ví dụ: 5, 1, 4, 2, 8) để kiểm tra thuật toán với các trường hợp cụ thể.",
+        target: "#btn-custom-input",
+        position: "bottom"
+    },
+    {
+        title: "Bắt Đầu Sắp Xếp",
+        content: "Nhấn nút này để bắt đầu quá trình sắp xếp nổi bọt. Bạn sẽ thấy các phần tử di chuyển và so sánh với nhau.",
+        target: "#btn-start",
+        position: "bottom"
+    },
+    {
+        title: "Làm Mới (Reset)",
+        content: "Nếu muốn dừng quá trình sắp xếp hoặc quay lại trạng thái ban đầu của mảng hiện tại, hãy nhấn nút này.",
+        target: "#btn-reset",
         position: "bottom"
     },
     {
         title: "Điều Khiển Tốc Độ",
         content: "Kéo thanh trượt để điều chỉnh tốc độ mô phỏng. Kéo sang trái để chậm lại (dễ quan sát), kéo sang phải để tăng tốc.",
-        target: ".function-card .ms-auto",
+        target: "#animation-speed-slider",
         position: "bottom"
     },
     {
@@ -544,19 +470,13 @@ const tourSteps = [
             </ul>
         `,
         target: "#display-container",
-        position: "top" // Hiển thị bên dưới vì container lớn
+        position: "top"
     },
     {
         title: "Khu Vực Mã Giả (Pseudocode)",
         content: "Mã giả của thuật toán Bubble Sort. Khi chạy, dòng code đang thực thi sẽ được highlight màu vàng giúp bạn theo dõi logic.",
         target: "#toggle-sidebar",
         position: "left"
-    },
-    {
-        title: "Bắt Đầu Sắp Xếp",
-        content: "Nhấn nút <strong><i class='bi bi-play-circle'></i> Start Sort</strong> để bắt đầu quá trình sắp xếp. Nút <strong>Reset</strong> để quay lại trạng thái ban đầu.",
-        target: "#btn-start",
-        position: "bottom"
     }
 ];
 
@@ -707,14 +627,13 @@ if (tourSkip) {
 }
 
 // Auto-start (optional logic)
+// Auto-start
 window.addEventListener("load", () => {
-    // Override previous tutorial check
-    // If you want to force show it once for testing, uncomment line below
-    // localStorage.removeItem("bubbleSortTourCompleted"); 
-
-    // Check old key or new key
-    if (!localStorage.getItem("bubbleSort_V2_Completed")) {
-        setTimeout(startTutorial, 1000);
-    }
+    setTimeout(() => {
+        if (guideModal) {
+            guideModal.show();
+            setupTourOnClose();
+        }
+    }, 500);
 });
 
