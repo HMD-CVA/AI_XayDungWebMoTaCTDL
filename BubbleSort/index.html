@@ -118,19 +118,96 @@
         </div>
     </div>
 
-    <!-- Tutorial Modal -->
-    <div class="tutorial-overlay">
-        <div class="tutorial-modal">
-            <div class="tutorial-header">
-                <h3 class="tutorial-title"></h3>
-                <span class="tutorial-progress"></span>
-            </div>
-            <div class="tutorial-content"></div>
-            <div class="tutorial-footer">
-                <button class="btn btn-outline-secondary" id="btn-previous-tutorial">Trước</button>
-                <div class="ms-auto d-flex gap-2">
-                    <button class="btn btn-secondary" id="btn-skip-tutorial">Bỏ qua</button>
-                    <button class="btn btn-primary" id="btn-next-tutorial">Tiếp</button>
+    <!-- Modal Hướng dẫn sử dụng -->
+    <div class="modal fade" id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="guideModalLabel">Bubble Sort (Sắp Xếp Nổi Bọt)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Phần 1: Lý thuyết cơ bản -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">1. Giới Thiệu Bubble Sort</h6>
+                        <p><strong>Định nghĩa:</strong> Bubble Sort là thuật toán sắp xếp đơn giản hoạt động bằng cách
+                            lặp đi lặp lại việc đổi chỗ 2 phần tử liền kề nếu chúng đứng sai thứ tự.</p>
+                        <ul>
+                            <li><strong>Cơ chế:</strong> Phần tử lớn nhất sẽ "nổi" dần xuống cuối danh sách sau mỗi vòng
+                                lặp.</li>
+                            <li><strong>Ưu điểm:</strong> Dễ hiểu, dễ cài đặt.</li>
+                            <li><strong>Nhược điểm:</strong> Hiệu suất chậm (O(n²)), không phù hợp với dữ liệu lớn.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phần 2: Độ phức tạp -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">2. Độ Phức Tạp Thuật Toán</h6>
+                        <table class="table table-bordered table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Trường hợp</th>
+                                    <th>Độ phức tạp</th>
+                                    <th>Giải thích</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tốt nhất</td>
+                                    <td><code>O(n)</code></td>
+                                    <td>Khi mảng đã sắp xếp sẵn (nếu có cờ kiểm tra)</td>
+                                </tr>
+                                <tr>
+                                    <td>Trung bình</td>
+                                    <td><code>O(n²)</code></td>
+                                    <td>Phải thực hiện n*(n-1)/2 phép so sánh</td>
+                                </tr>
+                                <tr>
+                                    <td>Xấu nhất</td>
+                                    <td><code>O(n²)</code></td>
+                                    <td>Khi mảng bị đảo ngược hoàn toàn</td>
+                                </tr>
+                                <tr>
+                                    <td>Không gian</td>
+                                    <td><code>O(1)</code></td>
+                                    <td>Sắp xếp tại chỗ (in-place)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Phần 3: Cách hoạt động -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">3. Cách Hoạt Động Chi Tiết</h6>
+                        <p>Giả sử sắp xếp mảng tăng dần:</p>
+                        <ol>
+                            <li>Bắt đầu từ phần tử đầu tiên, so sánh nó với phần tử liền kề.</li>
+                            <li>Nếu <code>arr[i] > arr[i+1]</code>, đổi chỗ chúng.</li>
+                            <li>Di chuyển sang cặp tiếp theo và lặp lại cho đến cuối mảng.</li>
+                            <li>Sau vòng lặp đầu tiên, phần tử lớn nhất đã ở đúng vị trí cuối cùng.</li>
+                            <li>Lặp lại quy trình cho các phần tử còn lại (trừ phần tử đã sắp xếp).</li>
+                        </ol>
+                    </div>
+
+                    <!-- Phần 4: Tính Năng Ứng Dụng -->
+                    <div class="guide-section">
+                        <h6 class="guide-title">4. Tính Năng Trong Visualizer</h6>
+                        <ul>
+                            <li><strong>Pseudocode:</strong> Theo dõi mã giả và các dòng lệnh đang thực thi.</li>
+                            <li><strong>Màu sắc:</strong>
+                                <ul>
+                                    <li><span style="color: #ff9a9e; font-weight: bold;">Đỏ:</span> Đang so sánh</li>
+                                    <li><span style="color: #a18cd1; font-weight: bold;">Tím:</span> Đang hoán đổi</li>
+                                    <li><span style="color: #43e97b; font-weight: bold;">Xanh lá:</span> Đã sắp xếp xong
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><strong>Tốc độ:</strong> Điều chỉnh tốc độ từ chậm đến nhanh.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                 </div>
             </div>
         </div>
