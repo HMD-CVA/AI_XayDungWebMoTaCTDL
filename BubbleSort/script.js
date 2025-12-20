@@ -448,7 +448,7 @@ const tourSteps = [
     },
     {
         title: "Làm Mới (Reset)",
-        content: "Nếu muốn dừng quá trình sắp xếp hoặc quay lại trạng thái ban đầu của mảng hiện tại, hãy nhấn nút này.",
+        content: "Nếu muốn quay lại trạng thái ban đầu của mảng hiện tại hãy nhấn nút này.",
         target: "#btn-reset",
         position: "bottom"
     },
